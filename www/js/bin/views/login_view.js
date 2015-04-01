@@ -14,6 +14,8 @@
 
       LoginView.prototype.template = _.template(template);
 
+      LoginView.prototype.tagName = "div";
+
       LoginView.prototype.events = {
         "click .login-btn": "login"
       };
@@ -25,6 +27,8 @@
 
       LoginView.prototype.login = function() {
         var email, password;
+        Backbone.history.navigate('home/forward', true);
+        return;
         email = this.$el.find("#loginEmail").val();
         password = this.$el.find("#loginPassword").val();
         console.log(email);
@@ -39,8 +43,7 @@
             commit: 'Log in'
           },
           success: function(result) {
-            console.log("hey");
-            return Backbone.history.navigate('home', true);
+            return Backbone.history.navigate('home/forward', true);
           },
           error: function(xhr, textStatus, errorThrown) {
             console.log(xhr);

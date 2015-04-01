@@ -42,3 +42,45 @@ a.plain:hover
 form {
   margin-bottom: 20px;
 }
+
+/* Override ratchet.css */
+.view-content {
+  padding-top: 44px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: auto;
+}
+
+.view-content.fade {
+  left: 0;
+  opacity: 0;
+}
+.view-content.fade.in {
+  opacity: 1;
+}
+.view-content.sliding {
+  z-index: 2;
+  -webkit-transition: -webkit-transform .4s;
+     -moz-transition:    -moz-transform .4s;
+          transition:         transform .4s;
+  -webkit-transform: translate3d(0, 0, 0);
+      -ms-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+}
+.view-content.sliding.left {
+  float: left;
+  z-index: 1;
+  -webkit-transform: translate3d(-100%, 0, 0);
+      -ms-transform: translate3d(-100%, 0, 0);
+          transform: translate3d(-100%, 0, 0);
+}
+.view-content.sliding.right {
+  float: right;
+  z-index: 3;
+  -webkit-transform: translate3d(100%, 0, 0);
+      -ms-transform: translate3d(100%, 0, 0);
+          transform: translate3d(100%, 0, 0);
+}

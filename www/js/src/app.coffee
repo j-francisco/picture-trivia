@@ -4,12 +4,17 @@ require.config({
 		'underscore': '../lib/underscore',
 		'backbone': '../lib/backbone-min',
 		'text': '../lib/text',
-		'fastclick': '../lib/fastclick'
+		'fastclick': '../lib/fastclick',
+		'pageslider': '../lib/pageslider',
+		'ratchet': '../lib/ratchet'
 	},
 	waitSeconds: 15,
 	shim: {
 		'fastclick': {
 			exports: 'FastClick'
+		},
+		'pageslider': {
+			exports: 'PageSlider'
 		},
 		'underscore': {
 			exports: '_'
@@ -35,10 +40,22 @@ require(
 		"backbone",
 		"routers/router",
 		"fastclick",
-		"utils"
+		"ratchet"
 	],
-	($, _, Backbone, AppRouter, fc) ->
+	($, _, Backbone, AppRouter, fc, ratchet) ->
 		$(() ->
+			$(document).on("click", "a:not([data-bypass])", (evt) ->
+				href = 
+					prop: $(this).prop("href"), 
+					attr: $(this).attr("href")
+
+				root = location.protocol + "//" + location.host + Backbone.history.options.root
+
+				if (href.prop && href.prop.slice(0, root.length) == root)
+					evt.preventDefault()
+					Backbone.history.navigate(href.attr, true)
+			)
+
 			app = new AppRouter()
 			Backbone.history.start()
 		)
@@ -46,13 +63,6 @@ require(
 
 
 
-
-
-# utils.loadTemplate([], () ->
-# 	app = new AppRouter()
-# 	console.log "HELLO?"
-# 	Backbone.history.start()
-# )
 
 document.addEventListener 'deviceready', (->
 	StatusBar.overlaysWebView false

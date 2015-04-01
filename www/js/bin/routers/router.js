@@ -14,21 +14,142 @@
 
       AppRouter.prototype.routes = {
         "": "login",
-        "login": "login",
-        "home": "home"
+        "login(/:direction)": "login",
+        "home(/:direction)": "home"
       };
 
-      AppRouter.prototype.login = function() {
-        var loginView;
-        console.log("HELLO");
+      AppRouter.prototype.directionBack = "back";
+
+      AppRouter.prototype.directionForward = "forward";
+
+      AppRouter.prototype.login = function(direction) {
+        var data, loginView, options;
         loginView = new LoginView();
-        return $("#content").html(loginView.render().el);
+        data = {
+          contents: loginView.render().$el
+        };
+        options = {
+          transition: !direction ? "none" : direction === this.directionBack ? "slide-out" : "slide-in",
+          container: $("#content").children().first()
+        };
+        return this.transition(data, options);
       };
 
-      AppRouter.prototype.home = function() {
-        var homeView;
+      AppRouter.prototype.home = function(direction) {
+        var data, homeView, options;
         homeView = new HomeView();
-        return $("#content").html(homeView.render().el);
+        data = {
+          contents: homeView.render().$el
+        };
+        options = {
+          transition: !direction ? "none" : direction === this.directionBack ? "slide-out" : "slide-in",
+          container: $("#content").children().first()
+        };
+        return this.transition(data, options);
+      };
+
+      AppRouter.prototype.transitionMap = {
+        slideIn: 'slide-out',
+        slideOut: 'slide-in',
+        fade: 'fade'
+      };
+
+      AppRouter.prototype.bars = {
+        bartab: '.bar-tab',
+        barnav: '.bar-nav',
+        barfooter: '.bar-footer',
+        barheadersecondary: '.bar-header-secondary'
+      };
+
+      AppRouter.prototype.transition = function(data, options) {
+        var barElement, key, _i, _len, _ref;
+        if (data.title) {
+          document.title = data.title;
+        }
+        if (options.transition) {
+          _ref = this.bars;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            key = _ref[_i];
+            if (this.bars.hasOwnProperty(key)) {
+              barElement = $(this.bars[key]);
+              if (data[key]) {
+                swapContent(data[key], barElement);
+              } else if (barElement) {
+                barElement.remove();
+              }
+            }
+          }
+        }
+        return this.swapContent(data.contents, options.container, options.transition, function() {});
+      };
+
+      AppRouter.prototype.swapContent = function(swap, container, transition, complete) {
+        var containerDirection, enter, fadeContainerEnd, fadeSwapEnd, slideEnd, swapDirection, transitionEnd;
+        transitionEnd = 'transitionend webkitTransitionEnd oTransitionEnd otransitionend';
+        if (!transition || transition === "none") {
+          if (container && container.length > 0) {
+            container.parent().html(swap);
+          } else if (swap.hasClass('content')) {
+            $('body').append(swap);
+          } else {
+            $('.content').html(swap);
+          }
+          return complete && complete();
+        } else if (container && container.length > 0) {
+          enter = /in$/.test(transition);
+          if (transition === 'fade') {
+            container.addClass('in');
+            container.addClass('fade');
+            swap.addClass('fade');
+            container.parent().prepend(swap);
+            container[0].offsetWidth;
+            container.removeClass('in');
+            fadeContainerEnd = function() {
+              swap.addClass('in');
+              return swap.one(transitionEnd, fadeSwapEnd);
+            };
+            fadeSwapEnd = function() {
+              container.remove();
+              swap.removeClass('fade');
+              swap.removeClass('in');
+              return complete && complete();
+            };
+            container.one(transitionEnd, fadeContainerEnd);
+          }
+          if (/slide/.test(transition)) {
+            swap.addClass('view-content');
+            swap.addClass('sliding-in');
+            swapDirection = enter ? 'right' : 'left';
+            swap.addClass(swapDirection);
+            swap.addClass('sliding');
+            container.addClass('view-content');
+            container.addClass('sliding');
+            container.parent().prepend(swap);
+            console.log(container);
+            slideEnd = function() {
+              console.log("slide end");
+              swap.removeClass('sliding');
+              swap.removeClass('sliding-in');
+              swap.removeClass(swapDirection);
+              swap.removeClass('view-content');
+              container.remove();
+              return complete && complete();
+            };
+            container[0].offsetWidth;
+            swapDirection = enter ? 'right' : 'left';
+            containerDirection = enter ? 'left' : 'right';
+            container.addClass(containerDirection);
+            swap.removeClass(swapDirection);
+            return swap.one(transitionEnd, slideEnd);
+          }
+        } else {
+          if (swap.hasClass('content')) {
+            $('body').append(swap);
+          } else {
+            $('.content').html(swap);
+          }
+          return complete && complete();
+        }
       };
 
       return AppRouter;
