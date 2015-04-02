@@ -26,14 +26,6 @@ require.config({
 	}
 })
 
-items = [
-	{ title: "Macbook Air", price: 799 },
-	{ title: "Macbook Pro", price: 999 },
-	{ title: "The new iPad", price: 399 },
-	{ title: "Magic Mouse", price: 50 },
-	{ title: "Cinema Display", price: 799 }
-]
-
 require(
 	["jquery",
 		"underscore",
@@ -44,24 +36,22 @@ require(
 	],
 	($, _, Backbone, AppRouter, fc, ratchet) ->
 		$(() ->
-			$(document).on("click", "a:not([data-bypass])", (evt) ->
+			$(document).on("click", "a:not([data-skip])", (evt) ->
 				href = 
 					prop: $(this).prop("href"), 
 					attr: $(this).attr("href")
 
 				root = location.protocol + "//" + location.host + Backbone.history.options.root
-
+				
 				if (href.prop && href.prop.slice(0, root.length) == root)
 					evt.preventDefault()
-					Backbone.history.navigate(href.attr, true)
+					Backbone.history.loadUrl(href.attr)
 			)
 
 			app = new AppRouter()
 			Backbone.history.start()
 		)
 )
-
-
 
 
 document.addEventListener 'deviceready', (->
@@ -71,8 +61,8 @@ document.addEventListener 'deviceready', (->
 	FastClick.attach document.body
 	if navigator.notification
 		# Override default HTML alert with native dialog
-		window.alert = (message) ->
-			navigator.notification.alert message, null, 'Workshop', 'OK'
+		window.alert = (message, title='Picture Trivia', btnText='OK') ->
+			navigator.notification.alert message, null, title, btnText
 			return
 
 	return

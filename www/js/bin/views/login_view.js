@@ -27,7 +27,7 @@
 
       LoginView.prototype.login = function() {
         var email, password;
-        Backbone.history.navigate('home/forward', true);
+        Backbone.history.loadUrl('home/fade');
         return;
         email = this.$el.find("#loginEmail").val();
         password = this.$el.find("#loginPassword").val();

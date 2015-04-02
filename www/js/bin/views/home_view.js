@@ -16,10 +16,6 @@
 
       HomeView.prototype.tagName = "div";
 
-      HomeView.prototype.events = {
-        "click .my-button": "clickBtn"
-      };
-
       HomeView.prototype.render = function() {
         this.$el.html(this.template());
         return this;

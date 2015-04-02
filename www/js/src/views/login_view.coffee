@@ -12,7 +12,7 @@ define ["backbone", "text!tpl/login_template.html"], (Backbone, template) ->
 			return this
 
 		login: () ->
-			Backbone.history.navigate('home/forward', true)
+			Backbone.history.loadUrl('home/fade')
 			return
 			email = @$el.find("#loginEmail").val()
 			password = @$el.find("#loginPassword").val()

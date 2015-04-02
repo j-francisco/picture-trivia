@@ -22,36 +22,22 @@
 
       AppRouter.prototype.directionForward = "forward";
 
+      AppRouter.prototype.directionFade = "fade";
+
       AppRouter.prototype.login = function(direction) {
-        var data, loginView, options;
+        var el, loginView;
+        this.navigate("login");
         loginView = new LoginView();
-        data = {
-          contents: loginView.render().$el
-        };
-        options = {
-          transition: !direction ? "none" : direction === this.directionBack ? "slide-out" : "slide-in",
-          container: $("#content").children().first()
-        };
-        return this.transition(data, options);
+        el = loginView.render().$el;
+        return this.transition(el, direction);
       };
 
       AppRouter.prototype.home = function(direction) {
-        var data, homeView, options;
+        var el, homeView;
+        this.navigate("home");
         homeView = new HomeView();
-        data = {
-          contents: homeView.render().$el
-        };
-        options = {
-          transition: !direction ? "none" : direction === this.directionBack ? "slide-out" : "slide-in",
-          container: $("#content").children().first()
-        };
-        return this.transition(data, options);
-      };
-
-      AppRouter.prototype.transitionMap = {
-        slideIn: 'slide-out',
-        slideOut: 'slide-in',
-        fade: 'fade'
+        el = homeView.render().$el;
+        return this.transition(el, direction);
       };
 
       AppRouter.prototype.bars = {
@@ -61,7 +47,33 @@
         barheadersecondary: '.bar-header-secondary'
       };
 
-      AppRouter.prototype.transition = function(data, options) {
+      AppRouter.prototype.transition = function(el, direction, container, callback) {
+        var data, options, transition;
+        transition = (function() {
+          switch (false) {
+            case direction !== this.directionBack:
+              return "slide-out";
+            case direction !== this.directionForward:
+              return "slide-in";
+            case direction !== this.directionFade:
+              return "fade";
+            default:
+              return "none";
+          }
+        }).call(this);
+        container = container != null ? container : $("#content").children().first();
+        data = {
+          contents: el
+        };
+        options = {
+          transition: transition,
+          container: container,
+          callback: callback
+        };
+        return this.doTransition(data, options, callback);
+      };
+
+      AppRouter.prototype.doTransition = function(data, options, callback) {
         var barElement, key, _i, _len, _ref;
         if (data.title) {
           document.title = data.title;
@@ -80,10 +92,10 @@
             }
           }
         }
-        return this.swapContent(data.contents, options.container, options.transition, function() {});
+        return this.swapContent(data.contents, options.container, options.transition, callback);
       };
 
-      AppRouter.prototype.swapContent = function(swap, container, transition, complete) {
+      AppRouter.prototype.swapContent = function(swap, container, transition, callback) {
         var containerDirection, enter, fadeContainerEnd, fadeSwapEnd, slideEnd, swapDirection, transitionEnd;
         transitionEnd = 'transitionend webkitTransitionEnd oTransitionEnd otransitionend';
         if (!transition || transition === "none") {
@@ -94,7 +106,7 @@
           } else {
             $('.content').html(swap);
           }
-          return complete && complete();
+          return callback && callback();
         } else if (container && container.length > 0) {
           enter = /in$/.test(transition);
           if (transition === 'fade') {
@@ -112,7 +124,7 @@
               container.remove();
               swap.removeClass('fade');
               swap.removeClass('in');
-              return complete && complete();
+              return callback && callback();
             };
             container.one(transitionEnd, fadeContainerEnd);
           }
@@ -125,15 +137,13 @@
             container.addClass('view-content');
             container.addClass('sliding');
             container.parent().prepend(swap);
-            console.log(container);
             slideEnd = function() {
-              console.log("slide end");
               swap.removeClass('sliding');
               swap.removeClass('sliding-in');
               swap.removeClass(swapDirection);
               swap.removeClass('view-content');
               container.remove();
-              return complete && complete();
+              return callback && callback();
             };
             container[0].offsetWidth;
             swapDirection = enter ? 'right' : 'left';
@@ -148,7 +158,7 @@
           } else {
             $('.content').html(swap);
           }
-          return complete && complete();
+          return callback && callback();
         }
       };
 

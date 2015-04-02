@@ -3,8 +3,9 @@ define ["backbone", "text!tpl/home_template.html"], (Backbone, template) ->
 		template: _.template(template)
 		tagName: "div"
 
-		events:
-			"click .my-button": "clickBtn"
+		# events:
+		# 	"click .alert": "clickBtn"
+
 
 		render: () ->
 			@$el.html(@template())
