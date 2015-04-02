@@ -63,13 +63,13 @@
         if (loggedIn) {
           return Backbone.history.loadUrl("home");
         } else {
-          console.log("fail?");
+          console.log("not logged in?");
           return Backbone.history.loadUrl("login");
         }
       };
       $(document).ready(function() {
-        auth(function() {
-          return startUp();
+        auth(function(loggedIn) {
+          return startUp(loggedIn);
         });
       });
       document.addEventListener('deviceready', (function() {

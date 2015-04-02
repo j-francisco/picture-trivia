@@ -63,12 +63,12 @@ require(
 				if loggedIn
 					Backbone.history.loadUrl("home")
 				else
-					console.log "fail?"
+					console.log "not logged in?"
 					Backbone.history.loadUrl("login")
 			
 			$(document).ready(() ->
-				auth(() ->
-					startUp()
+				auth((loggedIn) ->
+					startUp(loggedIn)
 				)
 				
 				return

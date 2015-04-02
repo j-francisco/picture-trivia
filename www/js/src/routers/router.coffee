@@ -4,7 +4,7 @@ define [
 	"views/home_view"], (Backbone, LoginView, HomeView) ->
 	class AppRouter extends Backbone.Router
 		routes:
-			"": "login"
+			"": "home"
 			"login(/:direction)": "login"
 			"home(/:direction)": "home"
 
@@ -13,12 +13,45 @@ define [
 		directionFade: "fade"
 
 		execute: (callback, args) ->
-			if callback && callback != @login
-				if !@auth()
-					@navigate("login", true) 
-					return
+			if @beforeRoute(callback)
+				# if beforeRoute returns true, we can continue.
+				# beforeRoute returns false if some validation failed and it redirected
 
-			callback.apply(this, args) if callback				
+				callback.apply(this, args) if callback	
+
+				@afterRoute()
+
+		routeRequiresAuth: (callback) ->
+			# list of routes that don't require authentication
+			nonAuthRoutes = [@login]
+			
+			return !_.contains(nonAuthRoutes, callback)
+
+		routeNotAccessibleAfterAuth: (callback) ->
+			# list of routes that you shouldn't get to if your logged in.
+			noAccessAfterAuthRoutes = [@login]
+
+			return _.contains(noAccessAfterAuthRoutes, callback)
+
+		beforeRoute: (callback) ->
+			# if callback is null, not much we can document
+			return false if !callback
+
+			# if the callback route requires auth, then we need to check auth
+			if @routeRequiresAuth(callback) && !@auth()
+				# auth failed, redirect to login
+				@navigate("login", true) 
+				return false	
+
+			else if @routeNotAccessibleAfterAuth(callback) && @auth()
+				# you shouldn't get to this route if your logged in, so redirect to root
+				@navigate("", true)
+				return false
+
+			return true
+
+		afterRoute: () ->
+
 
 		auth: () ->
 			return localStorage.loginEmail?

@@ -13,7 +13,7 @@
       }
 
       AppRouter.prototype.routes = {
-        "": "login",
+        "": "home",
         "login(/:direction)": "login",
         "home(/:direction)": "home"
       };
@@ -25,16 +25,41 @@
       AppRouter.prototype.directionFade = "fade";
 
       AppRouter.prototype.execute = function(callback, args) {
-        if (callback && callback !== this.login) {
-          if (!this.auth()) {
-            this.navigate("login", true);
-            return;
+        if (this.beforeRoute(callback)) {
+          if (callback) {
+            callback.apply(this, args);
           }
-        }
-        if (callback) {
-          return callback.apply(this, args);
+          return this.afterRoute();
         }
       };
+
+      AppRouter.prototype.routeRequiresAuth = function(callback) {
+        var nonAuthRoutes;
+        nonAuthRoutes = [this.login];
+        return !_.contains(nonAuthRoutes, callback);
+      };
+
+      AppRouter.prototype.routeNotAccessibleAfterAuth = function(callback) {
+        var noAccessAfterAuthRoutes;
+        noAccessAfterAuthRoutes = [this.login];
+        return _.contains(noAccessAfterAuthRoutes, callback);
+      };
+
+      AppRouter.prototype.beforeRoute = function(callback) {
+        if (!callback) {
+          return false;
+        }
+        if (this.routeRequiresAuth(callback) && !this.auth()) {
+          this.navigate("login", true);
+          return false;
+        } else if (this.routeNotAccessibleAfterAuth(callback) && this.auth()) {
+          this.navigate("", true);
+          return false;
+        }
+        return true;
+      };
+
+      AppRouter.prototype.afterRoute = function() {};
 
       AppRouter.prototype.auth = function() {
         return localStorage.loginEmail != null;
