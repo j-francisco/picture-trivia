@@ -12,23 +12,34 @@ define [
 		directionForward: "forward"
 		directionFade: "fade"
 
-		login: (direction) ->
-			@navigate("login")
+		execute: (callback, args) ->
+			if callback && callback != @login
+				if !@auth()
+					@navigate("login", true) 
+					return
 
+			callback.apply(this, args) if callback				
+
+		auth: () ->
+			return localStorage.loginEmail?
+
+		login: (direction) ->
 			loginView = new LoginView()
 
 			el = loginView.render().$el
 
 			@transition(el, direction)
 
-		home: (direction) ->
-			@navigate("home")
+			@navigate("login")
 
+		home: (direction) ->
 			homeView = new HomeView()
 			
 			el = homeView.render().$el
-			
+
 			@transition(el, direction)
+
+			@navigate("home")
 
 		bars: {
 			bartab : '.bar-tab',

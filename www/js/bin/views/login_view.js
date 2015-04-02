@@ -27,23 +27,18 @@
 
       LoginView.prototype.login = function() {
         var email, password;
-        Backbone.history.loadUrl('home/fade');
-        return;
         email = this.$el.find("#loginEmail").val();
         password = this.$el.find("#loginPassword").val();
-        console.log(email);
-        console.log(password);
         return $.ajax({
           url: "http://localhost:5000/user_login",
           type: "POST",
           data: {
             email: email,
-            password: password,
-            remember_me: 1,
-            commit: 'Log in'
+            password: password
           },
           success: function(result) {
-            return Backbone.history.navigate('home/forward', true);
+            localStorage.loginEmail = email;
+            return Backbone.history.loadUrl('home/forward');
           },
           error: function(xhr, textStatus, errorThrown) {
             console.log(xhr);

@@ -24,20 +24,36 @@
 
       AppRouter.prototype.directionFade = "fade";
 
+      AppRouter.prototype.execute = function(callback, args) {
+        if (callback && callback !== this.login) {
+          if (!this.auth()) {
+            this.navigate("login", true);
+            return;
+          }
+        }
+        if (callback) {
+          return callback.apply(this, args);
+        }
+      };
+
+      AppRouter.prototype.auth = function() {
+        return localStorage.loginEmail != null;
+      };
+
       AppRouter.prototype.login = function(direction) {
         var el, loginView;
-        this.navigate("login");
         loginView = new LoginView();
         el = loginView.render().$el;
-        return this.transition(el, direction);
+        this.transition(el, direction);
+        return this.navigate("login");
       };
 
       AppRouter.prototype.home = function(direction) {
         var el, homeView;
-        this.navigate("home");
         homeView = new HomeView();
         el = homeView.render().$el;
-        return this.transition(el, direction);
+        this.transition(el, direction);
+        return this.navigate("home");
       };
 
       AppRouter.prototype.bars = {

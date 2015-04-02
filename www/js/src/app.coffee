@@ -1,3 +1,5 @@
+window.apiHost = "http://localhost:5000/"
+
 require.config({
 	paths: {
 		'jquery': '../lib/jquery',
@@ -36,6 +38,54 @@ require(
 	],
 	($, _, Backbone, AppRouter, fc, ratchet) ->
 		$(() ->
+			auth = (callback) ->
+				email = localStorage.loginEmail
+
+				if email?
+					console.log "ajax"
+					$.ajax
+						url: window.apiHost + "user_login"
+						type: "POST"
+						data:
+							email: email
+						success: () ->
+							callback(true)
+						error: () ->
+							localStorage.removeItem("loginEmail")
+							callback(false)
+				else
+					callback(false)
+
+			startUp = (loggedIn) ->
+				app = new AppRouter()
+				Backbone.history.start()
+
+				if loggedIn
+					Backbone.history.loadUrl("home")
+				else
+					console.log "fail?"
+					Backbone.history.loadUrl("login")
+			
+			$(document).ready(() ->
+				auth(() ->
+					startUp()
+				)
+				
+				return
+			)
+
+			document.addEventListener 'deviceready', (->				
+				StatusBar.overlaysWebView false
+				StatusBar.backgroundColorByHexString '#ffffff'
+				StatusBar.styleDefault()
+				FastClick.attach document.body
+				if navigator.notification
+					# Override default HTML alert with native dialog
+					window.alert = (message, title='Picture Trivia', btnText='OK') ->
+						navigator.notification.alert message, null, title, btnText
+						return
+			), false
+
 			$(document).on("click", "a:not([data-skip])", (evt) ->
 				href = 
 					prop: $(this).prop("href"), 
@@ -48,22 +98,7 @@ require(
 					Backbone.history.loadUrl(href.attr)
 			)
 
-			app = new AppRouter()
-			Backbone.history.start()
+			
 		)
 )
 
-
-document.addEventListener 'deviceready', (->
-	StatusBar.overlaysWebView false
-	StatusBar.backgroundColorByHexString '#ffffff'
-	StatusBar.styleDefault()
-	FastClick.attach document.body
-	if navigator.notification
-		# Override default HTML alert with native dialog
-		window.alert = (message, title='Picture Trivia', btnText='OK') ->
-			navigator.notification.alert message, null, title, btnText
-			return
-
-	return
-), false

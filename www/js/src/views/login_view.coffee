@@ -12,22 +12,18 @@ define ["backbone", "text!tpl/login_template.html"], (Backbone, template) ->
 			return this
 
 		login: () ->
-			Backbone.history.loadUrl('home/fade')
-			return
 			email = @$el.find("#loginEmail").val()
 			password = @$el.find("#loginPassword").val()
-			console.log email
-			console.log password
+			
 			$.ajax
 				url: "http://localhost:5000/user_login"
 				type: "POST"
 				data:
 					email: email
 					password: password
-					remember_me: 1
-					commit: 'Log in'
 				success: (result) ->
-					Backbone.history.navigate('home/forward', true)
+					localStorage.loginEmail = email
+					Backbone.history.loadUrl('home/forward')
 				error: (xhr, textStatus, errorThrown) ->
 					console.log xhr
 					console.log textStatus
