@@ -26,24 +26,20 @@
       };
 
       LoginView.prototype.login = function() {
-        var email, password;
+        var email;
         email = this.$el.find("#loginEmail").val();
-        password = this.$el.find("#loginPassword").val();
         return $.ajax({
           url: "http://localhost:5000/user_login",
           type: "POST",
           data: {
-            email: email,
-            password: password
+            email: email
           },
           success: function(result) {
             localStorage.loginEmail = email;
             return Backbone.history.loadUrl('home/forward');
           },
           error: function(xhr, textStatus, errorThrown) {
-            console.log(xhr);
-            console.log(textStatus);
-            return console.log(errorThrown);
+            return alert("Invalid Login, Sorry!");
           }
         });
       };

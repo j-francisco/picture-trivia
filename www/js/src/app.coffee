@@ -38,11 +38,16 @@ require(
 	],
 	($, _, Backbone, AppRouter, fc, ratchet) ->
 		$(() ->
+			window.PictureTrivia = 
+				Models: {}
+				Collections: {}
+				Views: {}
+				
+
 			auth = (callback) ->
 				email = localStorage.loginEmail
 
 				if email?
-					console.log "ajax"
 					$.ajax
 						url: window.apiHost + "user_login"
 						type: "POST"
@@ -63,7 +68,6 @@ require(
 				if loggedIn
 					Backbone.history.loadUrl("home")
 				else
-					console.log "not logged in?"
 					Backbone.history.loadUrl("login")
 			
 			$(document).ready(() ->

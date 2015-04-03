@@ -13,20 +13,18 @@ define ["backbone", "text!tpl/login_template.html"], (Backbone, template) ->
 
 		login: () ->
 			email = @$el.find("#loginEmail").val()
-			password = @$el.find("#loginPassword").val()
+			# password = @$el.find("#loginPassword").val()
 			
 			$.ajax
 				url: "http://localhost:5000/user_login"
 				type: "POST"
 				data:
 					email: email
-					password: password
+					# password: password
 				success: (result) ->
 					localStorage.loginEmail = email
 					Backbone.history.loadUrl('home/forward')
 				error: (xhr, textStatus, errorThrown) ->
-					console.log xhr
-					console.log textStatus
-					console.log errorThrown
+					alert("Invalid Login, Sorry!")
 
 	return LoginView

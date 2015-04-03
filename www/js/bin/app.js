@@ -33,11 +33,15 @@
   require(["jquery", "underscore", "backbone", "routers/router", "fastclick", "ratchet"], function($, _, Backbone, AppRouter, fc, ratchet) {
     return $(function() {
       var auth, startUp;
+      window.PictureTrivia = {
+        Models: {},
+        Collections: {},
+        Views: {}
+      };
       auth = function(callback) {
         var email;
         email = localStorage.loginEmail;
         if (email != null) {
-          console.log("ajax");
           return $.ajax({
             url: window.apiHost + "user_login",
             type: "POST",
@@ -63,7 +67,6 @@
         if (loggedIn) {
           return Backbone.history.loadUrl("home");
         } else {
-          console.log("not logged in?");
           return Backbone.history.loadUrl("login");
         }
       };

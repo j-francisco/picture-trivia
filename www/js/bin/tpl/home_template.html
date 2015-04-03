@@ -1,2 +1,15 @@
-<h2>Welcome to Picture Trivia</h2>
-<a href="login/back">Back</a>
+
+<!-- <a href="login/back">Back</a> -->
+
+<div class="question-picture-container">
+	<div class="question"><%- question.get("text") %></div>
+	<img class="question-picture" src="assets/img/Tyrion.jpg"></img>
+</div>
+
+<div class="answer-container">
+	<% question.get("answers").each(function(answer) { %>
+		<button class="btn btn-primary btn-block btn-outlined answer" data-answer-id="<%- answer.id %>">
+			<%- answer.get("text") %>
+		</button>
+	<% }); %>
+</div>

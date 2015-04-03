@@ -4,23 +4,18 @@
     __hasProp = {}.hasOwnProperty;
 
   define(["backbone"], function(Backbone) {
-    var Item;
-    Item = (function(_super) {
-      __extends(Item, _super);
+    var Answer;
+    Answer = (function(_super) {
+      __extends(Answer, _super);
 
-      function Item() {
-        return Item.__super__.constructor.apply(this, arguments);
+      function Answer() {
+        return Answer.__super__.constructor.apply(this, arguments);
       }
 
-      Item.prototype.defaults = {
-        price: 35,
-        photo: "http://www.placedog.com/100/100"
-      };
-
-      return Item;
+      return Answer;
 
     })(Backbone.Model);
-    return Item;
+    return Answer;
   });
 
 }).call(this);

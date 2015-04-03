@@ -1,7 +1,10 @@
 define [
 	"backbone", 
 	"views/login_view",	
-	"views/home_view"], (Backbone, LoginView, HomeView) ->
+	"views/home_view"],	(Backbone, 
+		LoginView, 
+		HomeView) ->
+
 	class AppRouter extends Backbone.Router
 		routes:
 			"": "home"
@@ -81,6 +84,11 @@ define [
 			barheadersecondary : '.bar-header-secondary'
 		}
 
+		#TODO - updating header and footer buttons/menus etc.
+		# idea - each view could have its own header and footer that also gets updated here.
+		# have a base view to handle the common defaults.
+		# the bars above will be key to this i think
+		
 		transition: (el, direction, container, callback) ->
 			transition = switch
 				when direction == @directionBack then "slide-out"
