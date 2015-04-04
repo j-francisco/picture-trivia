@@ -3,7 +3,7 @@
   var __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __hasProp = {}.hasOwnProperty;
 
-  define(["backbone", "views/login_view", "views/home_view"], function(Backbone, LoginView, HomeView) {
+  define(["backbone", "views/base_header_view", "views/login_view", "views/home_view", "views/question_view"], function(Backbone, BaseHeaderView, LoginView, HomeView, QuestionView) {
     var AppRouter;
     AppRouter = (function(_super) {
       __extends(AppRouter, _super);
@@ -15,7 +15,8 @@
       AppRouter.prototype.routes = {
         "": "home",
         "login(/:direction)": "login",
-        "home(/:direction)": "home"
+        "home(/:direction)": "home",
+        "question(/:direction)": "question"
       };
 
       AppRouter.prototype.directionBack = "back";
@@ -23,6 +24,12 @@
       AppRouter.prototype.directionForward = "forward";
 
       AppRouter.prototype.directionFade = "fade";
+
+      AppRouter.prototype.initialize = function() {
+        console.log("init router");
+        this.currentHeader = new BaseHeaderView();
+        return $("header").html(this.currentHeader.render().el);
+      };
 
       AppRouter.prototype.execute = function(callback, args) {
         if (this.beforeRoute(callback)) {
@@ -79,6 +86,14 @@
         el = homeView.render().$el;
         this.transition(el, direction);
         return this.navigate("home");
+      };
+
+      AppRouter.prototype.question = function(direction) {
+        var el, questionView;
+        questionView = new QuestionView();
+        el = questionView.render().$el;
+        this.transition(el, direction);
+        return this.navigate("question");
       };
 
       AppRouter.prototype.bars = {

@@ -1,19 +1,29 @@
 define [
 	"backbone", 
+	"views/base_header_view",
 	"views/login_view",	
-	"views/home_view"],	(Backbone, 
+	"views/home_view",
+	"views/question_view"],	(Backbone, 
+		BaseHeaderView,
 		LoginView, 
-		HomeView) ->
+		HomeView,
+		QuestionView) ->
 
 	class AppRouter extends Backbone.Router
 		routes:
 			"": "home"
 			"login(/:direction)": "login"
 			"home(/:direction)": "home"
+			"question(/:direction)": "question"
 
 		directionBack: "back"
 		directionForward: "forward"
 		directionFade: "fade"
+
+		initialize: () ->
+			console.log "init router"
+			@currentHeader = new BaseHeaderView()
+			$("header").html(@currentHeader.render().el)
 
 		execute: (callback, args) ->
 			if @beforeRoute(callback)
@@ -76,6 +86,19 @@ define [
 			@transition(el, direction)
 
 			@navigate("home")
+
+		question: (direction) ->
+			questionView = new QuestionView()
+
+			el = questionView.render().$el
+
+			@transition(el, direction)
+
+			# headerEl = questionView.renderHeader()
+
+			# $("header").replaceWith($(headerEl))
+
+			@navigate("question")
 
 		bars: {
 			bartab : '.bar-tab',

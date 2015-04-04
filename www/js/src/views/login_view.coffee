@@ -1,5 +1,5 @@
-define ["backbone", "text!tpl/login_template.html"], (Backbone, template) ->
-	class LoginView extends Backbone.View
+define ["backbone", "views/base_view", "text!tpl/login.html"], (Backbone, BaseView, template) ->
+	class LoginView extends BaseView
 		template: _.template(template)
 
 		tagName: "div"

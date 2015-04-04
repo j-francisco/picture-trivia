@@ -1,3 +1,53 @@
+
+/*yellow*/
+.pt-color-yellow {
+  color: rgb(240, 173, 68);
+}
+.pt-bg-color-yellow {
+  background-color: rgb(240, 173, 68);
+}
+
+/* dark */ 
+.pt-color-dark { 
+  color: rgb(56, 80, 82);
+}
+.pt-bg-color-dark {
+  background-color: rgb(56, 80, 82);
+}
+
+/* blue */
+.pt-color-blue {
+  color: rgb(18, 128, 133);
+}
+.pt-bg-color-blue {
+  background-color: rgb(18, 128, 133);
+}
+.pt-bg-color-blue:active, .pt-bg-color-blue.active {
+  background-color: rgb(12,85,88);
+}
+
+/* light */
+.pt-color-light {
+  color: rgb(250, 232, 205);
+}
+.pt-bg-color-light {
+  background-color: rgb(250, 232, 205);
+}
+
+/* red */
+.pt-color-red {
+  color: rgb(199, 64, 41);
+}
+.pt-bg-color-red {
+  background-color: rgb(199, 64, 41);
+}
+
+.pt-btn {
+  cursor: pointer;
+}
+
+
+
 a.plain:link
 { color: #333; text-decoration: none }
 a.plain:active
@@ -86,6 +136,32 @@ form {
 }
 
 
+.home-start {
+  height: 100%;
+  width: 100%;
+}
+
+.play-now-btn {
+  width: 175px;
+  height: 100px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  border: 1px solid #ddd;
+  text-align: center;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.play-lbl {
+  display: inline-block;
+  margin-top: 40px;
+  color: white;
+}
 
 .question-picture-container {
   text-align: center;
