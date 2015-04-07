@@ -3,25 +3,24 @@ define [
 	"views/base_header_view",
 	"views/login_view",	
 	"views/home_view",
-	"views/question_view"],	(Backbone, 
+	"views/game_view"],	(Backbone, 
 		BaseHeaderView,
 		LoginView, 
 		HomeView,
-		QuestionView) ->
+		GameView) ->
 
 	class AppRouter extends Backbone.Router
 		routes:
 			"": "home"
 			"login(/:direction)": "login"
 			"home(/:direction)": "home"
-			"question(/:direction)": "question"
+			"game(/:direction)": "game"
 
 		directionBack: "back"
 		directionForward: "forward"
 		directionFade: "fade"
 
 		initialize: () ->
-			console.log "init router"
 			@currentHeader = new BaseHeaderView()
 			$("header").html(@currentHeader.render().el)
 
@@ -47,7 +46,9 @@ define [
 			return _.contains(noAccessAfterAuthRoutes, callback)
 
 		beforeRoute: (callback) ->
-			# if callback is null, not much we can document
+			@currentView.remove() if @currentView?
+
+			# if callback is null, not much we can do
 			return false if !callback
 
 			# if the callback route requires auth, then we need to check auth
@@ -70,35 +71,31 @@ define [
 			return localStorage.loginEmail?
 
 		login: (direction) ->
-			loginView = new LoginView()
+			@currentView = new LoginView()
 
-			el = loginView.render().$el
+			el = @currentView.render().$el
 
 			@transition(el, direction)
 
 			@navigate("login")
 
 		home: (direction) ->
-			homeView = new HomeView()
+			@currentView = new HomeView()
 			
-			el = homeView.render().$el
+			el = @currentView.render().$el
 
 			@transition(el, direction)
 
 			@navigate("home")
 
-		question: (direction) ->
-			questionView = new QuestionView()
+		game: (direction) ->
+			@currentView = new GameView()
 
-			el = questionView.render().$el
+			el = @currentView.render().$el
 
 			@transition(el, direction)
 
-			# headerEl = questionView.renderHeader()
-
-			# $("header").replaceWith($(headerEl))
-
-			@navigate("question")
+			@navigate("game")
 
 		bars: {
 			bartab : '.bar-tab',

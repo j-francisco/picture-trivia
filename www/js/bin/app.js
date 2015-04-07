@@ -38,6 +38,7 @@
         Collections: {},
         Views: {}
       };
+      window.PictureTrivia.eventBus = _.extend({}, Backbone.Events);
       auth = function(callback) {
         var email;
         email = localStorage.loginEmail;

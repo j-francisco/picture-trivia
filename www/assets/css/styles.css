@@ -179,3 +179,17 @@ form {
   padding-left: 20px;
   padding-right: 20px;
 }
+
+.btn-outlined.btn-primary.answer-correct {
+  border-color: #00BD72;
+  color: #00BD72;
+}
+
+.btn-outlined.btn-primary.answer-wrong {
+  border-color: #E34517;
+  color: #E34517;
+}
+
+.btn-primary:focus {
+  outline: none;
+}

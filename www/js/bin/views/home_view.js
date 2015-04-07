@@ -3,7 +3,7 @@
   var __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __hasProp = {}.hasOwnProperty;
 
-  define(["backbone", "views/base_view", "text!tpl/home.html", "models/answer", "collections/answer_collection", "models/question"], function(Backbone, BaseView, template, Answer, AnswerCollection, Question) {
+  define(["backbone", "views/base_view", "text!tpl/home.html", "views/game_view"], function(Backbone, BaseView, template, GameView) {
     var HomeView;
     HomeView = (function(_super) {
       __extends(HomeView, _super);

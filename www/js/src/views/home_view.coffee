@@ -1,9 +1,7 @@
 define ["backbone", 
 	"views/base_view",
 	"text!tpl/home.html", 
-	"models/answer", 
-	"collections/answer_collection", 
-	"models/question"], (Backbone, BaseView, template, Answer, AnswerCollection, Question) ->
+	"views/game_view"], (Backbone, BaseView, template, GameView) ->
 
 	class HomeView extends BaseView
 		template: _.template(template)

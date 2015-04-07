@@ -12,5 +12,4 @@ define ["backbone",
 			return this
 
 		goBack: () ->
-			console.log "back"
-			window.history.back()
+			Backbone.history.history.back()

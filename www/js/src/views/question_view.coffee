@@ -3,27 +3,37 @@ define ["backbone",
 	"text!tpl/question.html", 
 	"models/answer", 
 	"collections/answer_collection", 
-	"models/question"], (Backbone, BaseView, template, Answer, AnswerCollection, Question) ->
+	"models/question",
+	"views/answer_view"], (Backbone, BaseView, template, Answer, AnswerCollection, Question, AnswerView) ->
 
 	class QuestionView extends BaseView
 		template: _.template(template)
 		tagName: "div"
 
+		eventBus: [
+			"answer:clicked": "answerClicked"
+		]
+
+		subViews: []
+
+		initialize: (options) ->
+			@subViews = []
+			@model = options.question
+
 		render: () ->
-			answers = new AnswerCollection()
-			answers.add new Answer({id: 1, text: "Jon Snow"})
-			answers.add new Answer({id: 2, text: "Tywin Lannister"})
-			answers.add new Answer({id: 3, text: "Tyrion Lannister"})
-			answers.add new Answer({id: 4, text: "Bran Stark"})
+			@$el.html(@template(question: @model))
 
-			question = new Question({
-				text: "Who is this Game of Thrones character?"
-				answer_id: 3
-				answers: answers
-			})
+			@model.get("answers").each (answer) =>
+				answerView = new AnswerView(model: answer)
+				@subViews.push answerView
+				@$el.find(".answer-container").append(answerView.render().el)
 
-			@$el.html(@template(question: question))
 			return this
+
+		answerClicked: (answerId) ->
+			correct = parseInt(answerId) == parseInt(@model.get("answer_id"))
+			PictureTrivia.eventBus.trigger("question:answered", correct)
+
 
 
 	return QuestionView

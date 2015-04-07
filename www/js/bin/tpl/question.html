@@ -1,12 +1,8 @@
 <div class="question-picture-container">
 	<div class="question"><%- question.get("text") %></div>
-	<img class="question-picture" src="assets/img/Tyrion.jpg"></img>
+	<img class="question-picture" src="<%- question.get('img_src') %>"></img>
 </div>
 
 <div class="answer-container">
-	<% question.get("answers").each(function(answer) { %>
-		<button class="btn btn-primary btn-block btn-outlined answer" data-answer-id="<%- answer.id %>">
-			<%- answer.get("text") %>
-		</button>
-	<% }); %>
+	
 </div>

@@ -3,7 +3,7 @@
   var __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __hasProp = {}.hasOwnProperty;
 
-  define(["backbone", "views/base_header_view", "views/login_view", "views/home_view", "views/question_view"], function(Backbone, BaseHeaderView, LoginView, HomeView, QuestionView) {
+  define(["backbone", "views/base_header_view", "views/login_view", "views/home_view", "views/game_view"], function(Backbone, BaseHeaderView, LoginView, HomeView, GameView) {
     var AppRouter;
     AppRouter = (function(_super) {
       __extends(AppRouter, _super);
@@ -16,7 +16,7 @@
         "": "home",
         "login(/:direction)": "login",
         "home(/:direction)": "home",
-        "question(/:direction)": "question"
+        "game(/:direction)": "game"
       };
 
       AppRouter.prototype.directionBack = "back";
@@ -26,7 +26,6 @@
       AppRouter.prototype.directionFade = "fade";
 
       AppRouter.prototype.initialize = function() {
-        console.log("init router");
         this.currentHeader = new BaseHeaderView();
         return $("header").html(this.currentHeader.render().el);
       };
@@ -53,6 +52,9 @@
       };
 
       AppRouter.prototype.beforeRoute = function(callback) {
+        if (this.currentView != null) {
+          this.currentView.remove();
+        }
         if (!callback) {
           return false;
         }
@@ -73,27 +75,27 @@
       };
 
       AppRouter.prototype.login = function(direction) {
-        var el, loginView;
-        loginView = new LoginView();
-        el = loginView.render().$el;
+        var el;
+        this.currentView = new LoginView();
+        el = this.currentView.render().$el;
         this.transition(el, direction);
         return this.navigate("login");
       };
 
       AppRouter.prototype.home = function(direction) {
-        var el, homeView;
-        homeView = new HomeView();
-        el = homeView.render().$el;
+        var el;
+        this.currentView = new HomeView();
+        el = this.currentView.render().$el;
         this.transition(el, direction);
         return this.navigate("home");
       };
 
-      AppRouter.prototype.question = function(direction) {
-        var el, questionView;
-        questionView = new QuestionView();
-        el = questionView.render().$el;
+      AppRouter.prototype.game = function(direction) {
+        var el;
+        this.currentView = new GameView();
+        el = this.currentView.render().$el;
         this.transition(el, direction);
-        return this.navigate("question");
+        return this.navigate("game");
       };
 
       AppRouter.prototype.bars = {

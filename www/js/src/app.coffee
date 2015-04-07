@@ -42,7 +42,10 @@ require(
 				Models: {}
 				Collections: {}
 				Views: {}
-				
+
+			# global backbone event bus
+			window.PictureTrivia.eventBus = _.extend {}, Backbone.Events
+
 
 			auth = (callback) ->
 				email = localStorage.loginEmail

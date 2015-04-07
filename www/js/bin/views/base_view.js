@@ -4,24 +4,55 @@
     __hasProp = {}.hasOwnProperty;
 
   define(["backbone"], function(Backbone) {
-    var BaseHeaderView;
-    return BaseHeaderView = (function(_super) {
-      __extends(BaseHeaderView, _super);
+    var BaseView;
+    return BaseView = (function(_super) {
+      __extends(BaseView, _super);
 
-      function BaseHeaderView() {
-        return BaseHeaderView.__super__.constructor.apply(this, arguments);
+      function BaseView() {
+        if (this.eventBus != null) {
+          _.each(this.eventBus, (function(_this) {
+            return function(item) {
+              var key, method;
+              key = Object.keys(item)[0];
+              method = _this[item[key]];
+              console.log("On");
+              console.log(key);
+              PictureTrivia.eventBus.on(key, method, _this);
+            };
+          })(this));
+        }
+        BaseView.__super__.constructor.apply(this, arguments);
       }
 
-      BaseHeaderView.prototype.events = function() {
+      BaseView.prototype.remove = function() {
+        if (this.eventBus != null) {
+          _.each(this.eventBus, (function(_this) {
+            return function(item) {
+              var key, method;
+              key = Object.keys(item)[0];
+              method = _this[item[key]];
+              return PictureTrivia.eventBus.off(key, method, _this);
+            };
+          })(this));
+        }
+        if (this.subViews != null) {
+          _.each(this.subViews, function(subView) {
+            return subView.remove();
+          });
+        }
+        this.undelegateEvents();
+        Backbone.View.prototype.remove.call(this);
+      };
+
+      BaseView.prototype.events = function() {
         return _.extend({}, this.baseEvents, this.additionalEvents);
       };
 
-      BaseHeaderView.prototype.goBack = function() {
-        console.log("back");
+      BaseView.prototype.goBack = function() {
         return window.history.back();
       };
 
-      return BaseHeaderView;
+      return BaseView;
 
     })(Backbone.View);
   });

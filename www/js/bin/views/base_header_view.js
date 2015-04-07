@@ -24,8 +24,7 @@
       };
 
       BaseHeaderView.prototype.goBack = function() {
-        console.log("back");
-        return window.history.back();
+        return Backbone.history.history.back();
       };
 
       return BaseHeaderView;

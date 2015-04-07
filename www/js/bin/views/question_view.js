@@ -3,7 +3,7 @@
   var __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __hasProp = {}.hasOwnProperty;
 
-  define(["backbone", "views/base_view", "text!tpl/question.html", "models/answer", "collections/answer_collection", "models/question"], function(Backbone, BaseView, template, Answer, AnswerCollection, Question) {
+  define(["backbone", "views/base_view", "text!tpl/question.html", "models/answer", "collections/answer_collection", "models/question", "views/answer_view"], function(Backbone, BaseView, template, Answer, AnswerCollection, Question, AnswerView) {
     var QuestionView;
     QuestionView = (function(_super) {
       __extends(QuestionView, _super);
@@ -16,34 +16,40 @@
 
       QuestionView.prototype.tagName = "div";
 
+      QuestionView.prototype.eventBus = [
+        {
+          "answer:clicked": "answerClicked"
+        }
+      ];
+
+      QuestionView.prototype.subViews = [];
+
+      QuestionView.prototype.initialize = function(options) {
+        this.subViews = [];
+        return this.model = options.question;
+      };
+
       QuestionView.prototype.render = function() {
-        var answers, question;
-        answers = new AnswerCollection();
-        answers.add(new Answer({
-          id: 1,
-          text: "Jon Snow"
-        }));
-        answers.add(new Answer({
-          id: 2,
-          text: "Tywin Lannister"
-        }));
-        answers.add(new Answer({
-          id: 3,
-          text: "Tyrion Lannister"
-        }));
-        answers.add(new Answer({
-          id: 4,
-          text: "Bran Stark"
-        }));
-        question = new Question({
-          text: "Who is this Game of Thrones character?",
-          answer_id: 3,
-          answers: answers
-        });
         this.$el.html(this.template({
-          question: question
+          question: this.model
         }));
+        this.model.get("answers").each((function(_this) {
+          return function(answer) {
+            var answerView;
+            answerView = new AnswerView({
+              model: answer
+            });
+            _this.subViews.push(answerView);
+            return _this.$el.find(".answer-container").append(answerView.render().el);
+          };
+        })(this));
         return this;
+      };
+
+      QuestionView.prototype.answerClicked = function(answerId) {
+        var correct;
+        correct = parseInt(answerId) === parseInt(this.model.get("answer_id"));
+        return PictureTrivia.eventBus.trigger("question:answered", correct);
       };
 
       return QuestionView;
