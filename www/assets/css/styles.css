@@ -170,8 +170,8 @@ form {
 
 .question-picture {
   margin-top: 10px;
-  height: 200px;
-  width: 200px;
+  height: 275px;
+  width: 320px;
 }
 
 .answer-container {
@@ -193,3 +193,7 @@ form {
 .btn-primary:focus {
   outline: none;
 }
+
+/*.question-picture-canvas {
+  border: 1px solid;
+}*/

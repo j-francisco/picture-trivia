@@ -24,44 +24,44 @@ define ["backbone",
 			@currentQuestionIndex = 0
 
 			q1 = new Question({
-				text: "Who is this Game of Thrones character?"
-				answer_id: 3
-				img_src: "assets/img/Tyrion.jpg"
+				text: "Which country is this?"
+				answer_id: 2
+				img_src: "assets/img/countries/usa.png"
 			})
 
 			answers = new AnswerCollection()
-			answers.add(new Answer({id: 1, text: "Jon Snow", question: q1}))
-			answers.add(new Answer({id: 2, text: "Tywin Lannister", question: q1}))
-			answers.add(new Answer({id: 3, text: "Tyrion Lannister", question: q1}))
-			answers.add(new Answer({id: 4, text: "Bran Stark", question: q1}))
+			answers.add(new Answer({id: 1, text: "Canada", question: q1}))
+			answers.add(new Answer({id: 2, text: "USA", question: q1}))
+			answers.add(new Answer({id: 3, text: "Mexico", question: q1}))
+			answers.add(new Answer({id: 4, text: "England", question: q1}))
 
 			q1.set("answers", answers)
 
 			q2 = new Question({
-				text: "Who is this character from Lost?"
-				answer_id: 4
-				img_src: "assets/img/john-locke.jpg"
+				text: "Which country is this?"
+				answer_id: 1
+				img_src: "assets/img/countries/mexico.png"
 			})
 
 			answers = new AnswerCollection()
-			answers.add(new Answer({id: 1, text: "Jack", question: q2}))
-			answers.add(new Answer({id: 2, text: "Hurley", question: q2}))
-			answers.add(new Answer({id: 3, text: "Sawyer", question: q2}))
-			answers.add(new Answer({id: 4, text: "Locke", question: q2}))
+			answers.add(new Answer({id: 1, text: "Mexico", question: q2}))
+			answers.add(new Answer({id: 2, text: "El Salvador", question: q2}))
+			answers.add(new Answer({id: 3, text: "USA", question: q2}))
+			answers.add(new Answer({id: 4, text: "Honduras", question: q2}))
 
 			q2.set("answers", answers)
 
 			q3 = new Question({
-				text: "Who is this character from The Wire?"
-				answer_id: 2
-				img_src: "assets/img/avon.jpg"
+				text: "Which country is this?"
+				answer_id: 3
+				img_src: "assets/img/countries/canada.png"
 			})
 
 			answers = new AnswerCollection()
-			answers.add(new Answer({id: 1, text: "Jimmy McNulty", question: q3}))
-			answers.add(new Answer({id: 2, text: "Avon Barksdale", question: q3}))
-			answers.add(new Answer({id: 3, text: "Tommy Carcetti", question: q3}))
-			answers.add(new Answer({id: 4, text: "Stringer Bell", question: q3}))
+			answers.add(new Answer({id: 1, text: "USA", question: q3}))
+			answers.add(new Answer({id: 2, text: "Greenland", question: q3}))
+			answers.add(new Answer({id: 3, text: "Canada", question: q3}))
+			answers.add(new Answer({id: 4, text: "Iceland", question: q3}))
 
 			q3.set("answers", answers)
 

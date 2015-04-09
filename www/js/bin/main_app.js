@@ -3176,25 +3176,18 @@
       }
 
       BaseView.prototype.remove = function() {
-        console.log("remove:");
-        console.log(this);
         if (this.eventBus != null) {
           _.each(this.eventBus, (function(_this) {
             return function(item) {
               var key, method;
               key = Object.keys(item)[0];
               method = _this[item[key]];
-              console.log("Off");
-              console.log(key);
               return PictureTrivia.eventBus.off(key, method, _this);
             };
           })(this));
         }
-        console.log(this.subViews);
         if (this.subViews != null) {
           _.each(this.subViews, function(subView) {
-            console.log("sub");
-            console.log(subView);
             return subView.remove();
           });
         }
@@ -3779,7 +3772,7 @@ define('text!tpl/game.html',[],function () { return '<div class="question-contai
 }).call(this);
 
 
-define('text!tpl/question.html',[],function () { return '<div class="question-picture-container">\n\t<div class="question"><%- question.get("text") %></div>\n\t<img class="question-picture" src="<%- question.get(\'img_src\') %>"></img>\n</div>\n\n<div class="answer-container">\n\t\n</div>';});
+define('text!tpl/question.html',[],function () { return '<div class="question-picture-container">\n\t<div class="question"><%- question.get("text") %></div>\n\t<img class="question-picture" src="<%- question.get(\'img_src\') %>"></img>\n\n\t<!-- <canvas class="question-picture-canvas" width="800" height="600"> -->\n</div>\n\n<div class="answer-container">\n\t\n</div>';});
 
 
 define('text!tpl/answer.html',[],function () { return '<span class="meme"><%- answer.text %></span>';});
@@ -3900,8 +3893,6 @@ define('text!tpl/answer.html',[],function () { return '<span class="meme"><%- an
               model: answer
             });
             _this.subViews.push(answerView);
-            console.log("sub views count:");
-            console.log(_this.subViews);
             return _this.$el.find(".answer-container").append(answerView.render().el);
           };
         })(this));
@@ -3910,9 +3901,145 @@ define('text!tpl/answer.html',[],function () { return '<span class="meme"><%- an
 
       QuestionView.prototype.answerClicked = function(answerId) {
         var correct;
-        console.log("answer clicked");
         correct = parseInt(answerId) === parseInt(this.model.get("answer_id"));
         return PictureTrivia.eventBus.trigger("question:answered", correct);
+      };
+
+      QuestionView.prototype.startCanvas = function() {
+        var canvas, ctx, dragStart, dragged, handleScroll, lastX, lastY, scaleFactor, zoom;
+        canvas = this.$el.find('canvas')[0];
+        this.canvas = canvas;
+        canvas.width = 800;
+        canvas.height = 600;
+        this.gkhead = new Image;
+        ctx = canvas.getContext('2d');
+        this.trackTransforms(ctx);
+        lastX = canvas.width / 2;
+        lastY = canvas.height / 2;
+        dragStart = void 0;
+        dragged = void 0;
+        canvas.addEventListener('mousedown', (function(evt) {
+          document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
+          lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
+          lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
+          dragStart = ctx.transformedPoint(lastX, lastY);
+          dragged = false;
+        }), false);
+        canvas.addEventListener('mousemove', ((function(_this) {
+          return function(evt) {
+            var pt;
+            lastX = evt.offsetX || evt.pageX - canvas.offsetLeft;
+            lastY = evt.offsetY || evt.pageY - canvas.offsetTop;
+            dragged = true;
+            if (dragStart) {
+              pt = ctx.transformedPoint(lastX, lastY);
+              ctx.translate(pt.x - dragStart.x, pt.y - dragStart.y);
+              _this.redraw(ctx);
+            }
+          };
+        })(this)), false);
+        canvas.addEventListener('mouseup', (function(evt) {
+          dragStart = null;
+          if (!dragged) {
+            zoom(evt.shiftKey ? -1 : 1);
+          }
+        }), false);
+        scaleFactor = 1.1;
+        zoom = (function(_this) {
+          return function(clicks) {
+            var factor, pt;
+            pt = ctx.transformedPoint(lastX, lastY);
+            ctx.translate(pt.x, pt.y);
+            factor = Math.pow(scaleFactor, clicks);
+            ctx.scale(factor, factor);
+            ctx.translate(-pt.x, -pt.y);
+            _this.redraw(ctx);
+          };
+        })(this);
+        handleScroll = function(evt) {
+          var delta;
+          delta = evt.wheelDelta ? evt.wheelDelta / 40 : evt.detail ? -evt.detail : 0;
+          if (delta) {
+            zoom(delta);
+          }
+          return evt.preventDefault() && false;
+        };
+        canvas.addEventListener('DOMMouseScroll', handleScroll, false);
+        canvas.addEventListener('mousewheel', handleScroll, false);
+        this.gkhead.src = 'assets/img/countries/usa.png';
+        return this.redraw(ctx);
+      };
+
+      QuestionView.prototype.trackTransforms = function(ctx) {
+        var pt, restore, rotate, save, savedTransforms, scale, setTransform, svg, transform, translate, xform;
+        svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        xform = svg.createSVGMatrix();
+        ctx.getTransform = function() {
+          return xform;
+        };
+        savedTransforms = [];
+        save = ctx.save;
+        ctx.save = function() {
+          savedTransforms.push(xform.translate(0, 0));
+          return save.call(ctx);
+        };
+        restore = ctx.restore;
+        ctx.restore = function() {
+          xform = savedTransforms.pop();
+          return restore.call(ctx);
+        };
+        scale = ctx.scale;
+        ctx.scale = function(sx, sy) {
+          xform = xform.scaleNonUniform(sx, sy);
+          return scale.call(ctx, sx, sy);
+        };
+        rotate = ctx.rotate;
+        ctx.rotate = function(radians) {
+          xform = xform.rotate(radians * 180 / Math.PI);
+          return rotate.call(ctx, radians);
+        };
+        translate = ctx.translate;
+        ctx.translate = function(dx, dy) {
+          xform = xform.translate(dx, dy);
+          return translate.call(ctx, dx, dy);
+        };
+        transform = ctx.transform;
+        ctx.transform = function(a, b, c, d, e, f) {
+          var m2;
+          m2 = svg.createSVGMatrix();
+          m2.a = a;
+          m2.b = b;
+          m2.c = c;
+          m2.d = d;
+          m2.e = e;
+          m2.f = f;
+          xform = xform.multiply(m2);
+          return transform.call(ctx, a, b, c, d, e, f);
+        };
+        setTransform = ctx.setTransform;
+        ctx.setTransform = function(a, b, c, d, e, f) {
+          xform.a = a;
+          xform.b = b;
+          xform.c = c;
+          xform.d = d;
+          xform.e = e;
+          xform.f = f;
+          return setTransform.call(ctx, a, b, c, d, e, f);
+        };
+        pt = svg.createSVGPoint();
+        ctx.transformedPoint = function(x, y) {
+          pt.x = x;
+          pt.y = y;
+          return pt.matrixTransform(xform.inverse());
+        };
+      };
+
+      QuestionView.prototype.redraw = function(ctx) {
+        var p1, p2;
+        p1 = ctx.transformedPoint(0, 0);
+        p2 = ctx.transformedPoint(this.canvas.width, this.canvas.height);
+        ctx.clearRect(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+        ctx.drawImage(this.gkhead, 0, 0);
       };
 
       return QuestionView;
@@ -3956,84 +4083,85 @@ define('text!tpl/answer.html',[],function () { return '<span class="meme"><%- an
       GameView.prototype.initialize = function() {
         var answers, q1, q2, q3;
         this.subViews = [];
+        this.currentQuestionIndex = 0;
         q1 = new Question({
-          text: "Who is this Game of Thrones character?",
-          answer_id: 3,
-          img_src: "assets/img/Tyrion.jpg"
+          text: "Which country is this?",
+          answer_id: 2,
+          img_src: "assets/img/countries/usa.png"
         });
         answers = new AnswerCollection();
         answers.add(new Answer({
           id: 1,
-          text: "Jon Snow",
+          text: "Canada",
           question: q1
         }));
         answers.add(new Answer({
           id: 2,
-          text: "Tywin Lannister",
+          text: "USA",
           question: q1
         }));
         answers.add(new Answer({
           id: 3,
-          text: "Tyrion Lannister",
+          text: "Mexico",
           question: q1
         }));
         answers.add(new Answer({
           id: 4,
-          text: "Bran Stark",
+          text: "England",
           question: q1
         }));
         q1.set("answers", answers);
         q2 = new Question({
-          text: "Who is this character from Lost?",
-          answer_id: 4,
-          img_src: "assets/img/john-locke.jpg"
+          text: "Which country is this?",
+          answer_id: 1,
+          img_src: "assets/img/countries/mexico.png"
         });
         answers = new AnswerCollection();
         answers.add(new Answer({
           id: 1,
-          text: "Jack",
+          text: "Mexico",
           question: q2
         }));
         answers.add(new Answer({
           id: 2,
-          text: "Hurley",
+          text: "El Salvador",
           question: q2
         }));
         answers.add(new Answer({
           id: 3,
-          text: "Sawyer",
+          text: "USA",
           question: q2
         }));
         answers.add(new Answer({
           id: 4,
-          text: "Locke",
+          text: "Honduras",
           question: q2
         }));
         q2.set("answers", answers);
         q3 = new Question({
-          text: "Who is this character from The Wire?",
-          answer_id: 2,
-          img_src: "assets/img/avon.jpg"
+          text: "Which country is this?",
+          answer_id: 3,
+          img_src: "assets/img/countries/canada.png"
         });
         answers = new AnswerCollection();
         answers.add(new Answer({
           id: 1,
-          text: "Jimmy McNulty",
+          text: "USA",
           question: q3
         }));
         answers.add(new Answer({
           id: 2,
-          text: "Avon Barksdale",
+          text: "Greenland",
           question: q3
         }));
         answers.add(new Answer({
           id: 3,
-          text: "Tommy Carcetti",
+          text: "Canada",
           question: q3
         }));
         answers.add(new Answer({
           id: 4,
-          text: "Stringer Bell",
+          text: "Iceland",
           question: q3
         }));
         q3.set("answers", answers);
@@ -4057,9 +4185,7 @@ define('text!tpl/answer.html',[],function () { return '<span class="meme"><%- an
           this.questionView = new QuestionView({
             question: question
           });
-          console.log("add to sub");
           this.subViews.push(this.questionView);
-          console.log(this.subViews.length);
           return this.$el.find(".question-container").html(this.questionView.render().el);
         } else {
           return alert("All Done!");
@@ -4067,7 +4193,6 @@ define('text!tpl/answer.html',[],function () { return '<span class="meme"><%- an
       };
 
       GameView.prototype.questionAnswered = function(correct) {
-        console.log("question answered");
         return this.renderNextQuestion(this.currentQuestionIndex + 1);
       };
 
