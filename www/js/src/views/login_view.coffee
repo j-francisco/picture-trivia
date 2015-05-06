@@ -20,9 +20,9 @@ define ["backbone", "views/base_view", "text!tpl/login.html"], (Backbone, BaseVi
 				type: "POST"
 				data:
 					email: email
-					# password: password
 				success: (result) ->
-					localStorage.loginEmail = email
+					localStorage.pictureTriviaLoginEmail = email
+					localStorage.pictureTriviaUserId = result.id
 					Backbone.history.loadUrl('home/forward')
 				error: (xhr, textStatus, errorThrown) ->
 					alert("Invalid Login, Sorry!")

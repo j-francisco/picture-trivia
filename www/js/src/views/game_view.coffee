@@ -1,13 +1,16 @@
 define ["backbone", 
 	"views/base_view",
 	"text!tpl/game.html", 
+	"text!tpl/game_loading.html",
 	"models/answer", 
 	"collections/answer_collection", 
 	"models/question",
-	"views/question_view"], (Backbone, BaseView, template, Answer, AnswerCollection, Question, QuestionView) ->
+	"models/game",
+	"views/question_view"], (Backbone, BaseView, template, loadingTemplate, Answer, AnswerCollection, Question, Game, QuestionView) ->
 
 	class GameView extends BaseView
 		template: _.template(template)
+		loadingTemplate: _.template(loadingTemplate)
 		tagName: "div"
 		className: "game"
 
@@ -20,70 +23,93 @@ define ["backbone",
 		subViews: []
 
 		initialize: () ->
+			game = new Game()
+			gameDetails = 
+				category_id: 1
+				user_id: localStorage.pictureTriviaUserId
+
+			game.save(gameDetails, {
+				success:(newGame) =>
+					@startGame(newGame)
+				error: (model, response, options) ->
+					error = $.parseJSON(response.responseText).errors
+					alert(error)
+					Backbone.history.loadUrl("home")
+			})	
+
+
+		startGame: (game) ->
 			@subViews = []
 			@currentQuestionIndex = 0
+			@game = game
 
-			q1 = new Question({
-				text: "Which country is this?"
-				answer_id: 2
-				img_src: "assets/img/countries/usa.png"
-			})
+			# q1 = new Question({
+			# 	text: "Which country is this?"
+			# 	answer_id: 2
+			# 	img_src: "assets/img/countries/usa.png"
+			# })
 
-			answers = new AnswerCollection()
-			answers.add(new Answer({id: 1, text: "Canada", question: q1}))
-			answers.add(new Answer({id: 2, text: "USA", question: q1}))
-			answers.add(new Answer({id: 3, text: "Mexico", question: q1}))
-			answers.add(new Answer({id: 4, text: "England", question: q1}))
+			# answers = new AnswerCollection()
+			# answers.add(new Answer({id: 1, text: "Canada", question: q1}))
+			# answers.add(new Answer({id: 2, text: "USA", question: q1}))
+			# answers.add(new Answer({id: 3, text: "Mexico", question: q1}))
+			# answers.add(new Answer({id: 4, text: "England", question: q1}))
 
-			q1.set("answers", answers)
+			# q1.set("answers", answers)
 
-			q2 = new Question({
-				text: "Which country is this?"
-				answer_id: 1
-				img_src: "assets/img/countries/mexico.png"
-			})
+			# q2 = new Question({
+			# 	text: "Which country is this?"
+			# 	answer_id: 1
+			# 	img_src: "assets/img/countries/mexico.png"
+			# })
 
-			answers = new AnswerCollection()
-			answers.add(new Answer({id: 1, text: "Mexico", question: q2}))
-			answers.add(new Answer({id: 2, text: "El Salvador", question: q2}))
-			answers.add(new Answer({id: 3, text: "USA", question: q2}))
-			answers.add(new Answer({id: 4, text: "Honduras", question: q2}))
+			# answers = new AnswerCollection()
+			# answers.add(new Answer({id: 1, text: "Mexico", question: q2}))
+			# answers.add(new Answer({id: 2, text: "El Salvador", question: q2}))
+			# answers.add(new Answer({id: 3, text: "USA", question: q2}))
+			# answers.add(new Answer({id: 4, text: "Honduras", question: q2}))
 
-			q2.set("answers", answers)
+			# q2.set("answers", answers)
 
-			q3 = new Question({
-				text: "Which country is this?"
-				answer_id: 3
-				img_src: "assets/img/countries/canada.png"
-			})
+			# q3 = new Question({
+			# 	text: "Which country is this?"
+			# 	answer_id: 3
+			# 	img_src: "assets/img/countries/canada.png"
+			# })
 
-			answers = new AnswerCollection()
-			answers.add(new Answer({id: 1, text: "USA", question: q3}))
-			answers.add(new Answer({id: 2, text: "Greenland", question: q3}))
-			answers.add(new Answer({id: 3, text: "Canada", question: q3}))
-			answers.add(new Answer({id: 4, text: "Iceland", question: q3}))
+			# answers = new AnswerCollection()
+			# answers.add(new Answer({id: 1, text: "USA", question: q3}))
+			# answers.add(new Answer({id: 2, text: "Greenland", question: q3}))
+			# answers.add(new Answer({id: 3, text: "Canada", question: q3}))
+			# answers.add(new Answer({id: 4, text: "Iceland", question: q3}))
 
-			q3.set("answers", answers)
+			# q3.set("answers", answers)
 
-			@questions = [q1, q2, q3]
+			# @questions = [q1, q2, q3]
 
-		render: () ->
-			@$el.html(@template())
+			@render(true)
 
-			@renderNextQuestion(0)
+		render: (ready=false) ->
+			if ready
+				@$el.html(@template())
+
+				@renderNextQuestion(0)
+			else
+				@$el.html(@loadingTemplate())
 
 			return this
 
 		renderNextQuestion: (questionIndex) ->
 			@currentQuestionIndex = questionIndex
 
-			question = @questions[questionIndex]
+			questionJson = @game.get("questions")[questionIndex]
 
-			if question?
+			if questionJson?
 
 				@questionView.remove() if @questionView?
 
-				@questionView = new QuestionView(question: question)
+				question = new Question(questionJson) 
+				@questionView = new QuestionView(model: question)
 
 				@subViews.push @questionView
 
@@ -93,8 +119,31 @@ define ["backbone",
 				alert("All Done!")
 
 
-		questionAnswered: (correct) ->
-			@renderNextQuestion(@currentQuestionIndex + 1)
+		questionAnswered: (questionId, answerId, isCorrect) ->
+			nextIndex = @currentQuestionIndex + 1
+			
+			if @game.get("questions").length == nextIndex
+				@submitAnswer(questionId, answerId, isCorrect, true)
+				alert("All Done!")
+			else
+				@submitAnswer(questionId, answerId, isCorrect, false)
+				@renderNextQuestion(nextIndex)
+
+		submitAnswer: (questionId, answerId, isCorrect, isFinished) ->
+			$.ajax
+				url: window.apiHost + "submit_answer"
+				type: "PUT"
+				data:
+					user_id: localStorage.pictureTriviaUserId
+					user_game_id: @game.get("user_game_id")
+					selected_answer_id: answerId
+					question_id: questionId
+					is_finished: isFinished
+				success: (result) ->
+					console.log "question answered successfully"
+				error: (result) ->
+					console.log result.responseText
+					console.log "question answer failed"
 
 
 	return GameView

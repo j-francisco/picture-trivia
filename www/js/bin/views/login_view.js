@@ -35,7 +35,8 @@
             email: email
           },
           success: function(result) {
-            localStorage.loginEmail = email;
+            localStorage.pictureTriviaLoginEmail = email;
+            localStorage.pictureTriviaUserId = result.id;
             return Backbone.history.loadUrl('home/forward');
           },
           error: function(xhr, textStatus, errorThrown) {

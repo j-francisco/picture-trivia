@@ -15,8 +15,6 @@
               var key, method;
               key = Object.keys(item)[0];
               method = _this[item[key]];
-              console.log("On");
-              console.log(key);
               PictureTrivia.eventBus.on(key, method, _this);
             };
           })(this));
@@ -49,7 +47,7 @@
       };
 
       BaseView.prototype.goBack = function() {
-        return window.history.back();
+        return history.go(-1);
       };
 
       return BaseView;

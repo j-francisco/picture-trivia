@@ -46,11 +46,11 @@ require(
 			# global backbone event bus
 			window.PictureTrivia.eventBus = _.extend {}, Backbone.Events
 
-
 			auth = (callback) ->
-				email = localStorage.loginEmail
-
-				if email?
+				email = localStorage.pictureTriviaLoginEmail
+				userId = localStorage.pictureTriviaUserId
+				
+				if email? && userId?
 					$.ajax
 						url: window.apiHost + "user_login"
 						type: "POST"
@@ -59,7 +59,7 @@ require(
 						success: () ->
 							callback(true)
 						error: () ->
-							localStorage.removeItem("loginEmail")
+							localStorage.removeItem("pictureTriviaLoginEmail")
 							callback(false)
 				else
 					callback(false)

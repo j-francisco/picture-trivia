@@ -3,10 +3,14 @@ define [
 	"views/base_header_view",
 	"views/login_view",	
 	"views/home_view",
+	"views/categories_view",
+	"views/get_ready_view",
 	"views/game_view"],	(Backbone, 
 		BaseHeaderView,
 		LoginView, 
 		HomeView,
+		CategoriesView,
+		GetReadyView,
 		GameView) ->
 
 	class AppRouter extends Backbone.Router
@@ -15,6 +19,8 @@ define [
 			"login(/:direction)": "login"
 			"home(/:direction)": "home"
 			"game(/:direction)": "game"
+			"categories(/:direction)": "categories"
+			"get_ready/:category(/:direction)": "getReady"
 
 		directionBack: "back"
 		directionForward: "forward"
@@ -46,8 +52,6 @@ define [
 			return _.contains(noAccessAfterAuthRoutes, callback)
 
 		beforeRoute: (callback) ->
-			@currentView.remove() if @currentView?
-
 			# if callback is null, not much we can do
 			return false if !callback
 
@@ -68,34 +72,68 @@ define [
 
 
 		auth: () ->
-			return localStorage.loginEmail?
+			return localStorage.pictureTriviaLoginEmail? && localStorage.pictureTriviaUserId
+
+		resetCurrentView: (view) ->
+			@currentView.remove() if @currentView?
+
+			@currentView = view
 
 		login: (direction) ->
-			@currentView = new LoginView()
+			view = new LoginView()
 
-			el = @currentView.render().$el
+			el = view.render().$el
 
 			@transition(el, direction)
+
+			@resetCurrentView(view)
 
 			@navigate("login")
 
 		home: (direction) ->
-			@currentView = new HomeView()
+			view = new HomeView()
 			
-			el = @currentView.render().$el
+			el = view.render().$el
 
 			@transition(el, direction)
+
+			@resetCurrentView(view)
 
 			@navigate("home")
 
 		game: (direction) ->
-			@currentView = new GameView()
+			view = new GameView()
 
-			el = @currentView.render().$el
+			el = view.render().$el
 
 			@transition(el, direction)
 
+			@resetCurrentView(view)
+
 			@navigate("game")
+
+		categories: (direction) ->
+			view = new CategoriesView()
+
+			el = view.render().$el
+
+			@transition(el, direction)
+
+			@resetCurrentView(view)
+
+			@navigate("categories")
+
+		getReady: (categoryName, direction) ->
+			view = new GetReadyView({categoryName: categoryName})
+
+			el = view.render().$el
+
+			@transition(el, direction)
+
+			@resetCurrentView(view)
+
+			@navigate("get_ready")
+			
 
 		bars: {
 			bartab : '.bar-tab',
@@ -147,7 +185,7 @@ define [
 
 		swapContent: (swap, container, transition, callback) ->
 			transitionEnd = 'transitionend webkitTransitionEnd oTransitionEnd otransitionend';
-
+			# debugger;
 			if !transition || transition == "none"
 				if container && container.length > 0
 					container.parent().html(swap)

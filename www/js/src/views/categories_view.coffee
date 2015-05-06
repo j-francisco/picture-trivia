@@ -1,9 +1,9 @@
 define ["backbone", 
 	"views/base_view",
-	"text!tpl/home.html", 
+	"text!tpl/categories.html", 
 	"views/game_view"], (Backbone, BaseView, template, GameView) ->
 
-	class HomeView extends BaseView
+	class CategoriesView extends BaseView
 		template: _.template(template)
 		tagName: "div"
 		className: "hw-100"
@@ -13,4 +13,4 @@ define ["backbone",
 			return this
 
 
-	return HomeView
+	return CategoriesView

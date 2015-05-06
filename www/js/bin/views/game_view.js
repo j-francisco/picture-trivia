@@ -3,7 +3,7 @@
   var __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __hasProp = {}.hasOwnProperty;
 
-  define(["backbone", "views/base_view", "text!tpl/game.html", "models/answer", "collections/answer_collection", "models/question", "views/question_view"], function(Backbone, BaseView, template, Answer, AnswerCollection, Question, QuestionView) {
+  define(["backbone", "views/base_view", "text!tpl/game.html", "text!tpl/game_loading.html", "models/answer", "collections/answer_collection", "models/question", "models/game", "views/question_view"], function(Backbone, BaseView, template, loadingTemplate, Answer, AnswerCollection, Question, Game, QuestionView) {
     var GameView;
     GameView = (function(_super) {
       __extends(GameView, _super);
@@ -13,6 +13,8 @@
       }
 
       GameView.prototype.template = _.template(template);
+
+      GameView.prototype.loadingTemplate = _.template(loadingTemplate);
 
       GameView.prototype.tagName = "div";
 
@@ -29,109 +31,58 @@
       GameView.prototype.subViews = [];
 
       GameView.prototype.initialize = function() {
-        var answers, q1, q2, q3;
-        this.subViews = [];
-        this.currentQuestionIndex = 0;
-        q1 = new Question({
-          text: "Which country is this?",
-          answer_id: 2,
-          img_src: "assets/img/countries/usa.png"
+        var game, gameDetails;
+        game = new Game();
+        gameDetails = {
+          category_id: 1,
+          user_id: localStorage.pictureTriviaUserId
+        };
+        return game.save(gameDetails, {
+          success: (function(_this) {
+            return function(newGame) {
+              return _this.startGame(newGame);
+            };
+          })(this),
+          error: function(model, response, options) {
+            var error;
+            error = $.parseJSON(response.responseText).errors;
+            alert(error);
+            return Backbone.history.loadUrl("home");
+          }
         });
-        answers = new AnswerCollection();
-        answers.add(new Answer({
-          id: 1,
-          text: "Canada",
-          question: q1
-        }));
-        answers.add(new Answer({
-          id: 2,
-          text: "USA",
-          question: q1
-        }));
-        answers.add(new Answer({
-          id: 3,
-          text: "Mexico",
-          question: q1
-        }));
-        answers.add(new Answer({
-          id: 4,
-          text: "England",
-          question: q1
-        }));
-        q1.set("answers", answers);
-        q2 = new Question({
-          text: "Which country is this?",
-          answer_id: 1,
-          img_src: "assets/img/countries/mexico.png"
-        });
-        answers = new AnswerCollection();
-        answers.add(new Answer({
-          id: 1,
-          text: "Mexico",
-          question: q2
-        }));
-        answers.add(new Answer({
-          id: 2,
-          text: "El Salvador",
-          question: q2
-        }));
-        answers.add(new Answer({
-          id: 3,
-          text: "USA",
-          question: q2
-        }));
-        answers.add(new Answer({
-          id: 4,
-          text: "Honduras",
-          question: q2
-        }));
-        q2.set("answers", answers);
-        q3 = new Question({
-          text: "Which country is this?",
-          answer_id: 3,
-          img_src: "assets/img/countries/canada.png"
-        });
-        answers = new AnswerCollection();
-        answers.add(new Answer({
-          id: 1,
-          text: "USA",
-          question: q3
-        }));
-        answers.add(new Answer({
-          id: 2,
-          text: "Greenland",
-          question: q3
-        }));
-        answers.add(new Answer({
-          id: 3,
-          text: "Canada",
-          question: q3
-        }));
-        answers.add(new Answer({
-          id: 4,
-          text: "Iceland",
-          question: q3
-        }));
-        q3.set("answers", answers);
-        return this.questions = [q1, q2, q3];
       };
 
-      GameView.prototype.render = function() {
-        this.$el.html(this.template());
-        this.renderNextQuestion(0);
+      GameView.prototype.startGame = function(game) {
+        this.subViews = [];
+        this.currentQuestionIndex = 0;
+        this.game = game;
+        return this.render(true);
+      };
+
+      GameView.prototype.render = function(ready) {
+        if (ready == null) {
+          ready = false;
+        }
+        if (ready) {
+          this.$el.html(this.template());
+          this.renderNextQuestion(0);
+        } else {
+          this.$el.html(this.loadingTemplate());
+        }
         return this;
       };
 
       GameView.prototype.renderNextQuestion = function(questionIndex) {
-        var question;
+        var question, questionJson;
         this.currentQuestionIndex = questionIndex;
-        question = this.questions[questionIndex];
-        if (question != null) {
+        questionJson = this.game.get("questions")[questionIndex];
+        if (questionJson != null) {
           if (this.questionView != null) {
             this.questionView.remove();
           }
+          question = new Question(questionJson);
           this.questionView = new QuestionView({
-            question: question
+            model: question
           });
           this.subViews.push(this.questionView);
           return this.$el.find(".question-container").html(this.questionView.render().el);
@@ -140,8 +91,37 @@
         }
       };
 
-      GameView.prototype.questionAnswered = function(correct) {
-        return this.renderNextQuestion(this.currentQuestionIndex + 1);
+      GameView.prototype.questionAnswered = function(questionId, answerId, isCorrect) {
+        var nextIndex;
+        nextIndex = this.currentQuestionIndex + 1;
+        if (this.game.get("questions").length === nextIndex) {
+          this.submitAnswer(questionId, answerId, isCorrect, true);
+          return alert("All Done!");
+        } else {
+          this.submitAnswer(questionId, answerId, isCorrect, false);
+          return this.renderNextQuestion(nextIndex);
+        }
+      };
+
+      GameView.prototype.submitAnswer = function(questionId, answerId, isCorrect, isFinished) {
+        return $.ajax({
+          url: window.apiHost + "submit_answer",
+          type: "PUT",
+          data: {
+            user_id: localStorage.pictureTriviaUserId,
+            user_game_id: this.game.get("user_game_id"),
+            selected_answer_id: answerId,
+            question_id: questionId,
+            is_finished: isFinished
+          },
+          success: function(result) {
+            return console.log("question answered successfully");
+          },
+          error: function(result) {
+            console.log(result.responseText);
+            return console.log("question answer failed");
+          }
+        });
       };
 
       return GameView;

@@ -26,16 +26,18 @@
 
       QuestionView.prototype.initialize = function(options) {
         this.subViews = [];
-        return this.model = options.question;
+        return this.model = options.model;
       };
 
       QuestionView.prototype.render = function() {
         this.$el.html(this.template({
           question: this.model
         }));
-        this.model.get("answers").each((function(_this) {
-          return function(answer) {
-            var answerView;
+        _.each(this.model.get("answers"), (function(_this) {
+          return function(answerJson) {
+            var answer, answerView;
+            answer = new Answer(answerJson);
+            answer.set("question", _this.model);
             answerView = new AnswerView({
               model: answer
             });
@@ -49,7 +51,7 @@
       QuestionView.prototype.answerClicked = function(answerId) {
         var correct;
         correct = parseInt(answerId) === parseInt(this.model.get("answer_id"));
-        return PictureTrivia.eventBus.trigger("question:answered", correct);
+        return PictureTrivia.eventBus.trigger("question:answered", this.model.get("id"), answerId, correct);
       };
 
       QuestionView.prototype.startCanvas = function() {

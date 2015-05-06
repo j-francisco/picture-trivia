@@ -40,9 +40,10 @@
       };
       window.PictureTrivia.eventBus = _.extend({}, Backbone.Events);
       auth = function(callback) {
-        var email;
-        email = localStorage.loginEmail;
-        if (email != null) {
+        var email, userId;
+        email = localStorage.pictureTriviaLoginEmail;
+        userId = localStorage.pictureTriviaUserId;
+        if ((email != null) && (userId != null)) {
           return $.ajax({
             url: window.apiHost + "user_login",
             type: "POST",
@@ -53,7 +54,7 @@
               return callback(true);
             },
             error: function() {
-              localStorage.removeItem("loginEmail");
+              localStorage.removeItem("pictureTriviaLoginEmail");
               return callback(false);
             }
           });

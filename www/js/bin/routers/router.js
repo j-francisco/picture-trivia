@@ -3,7 +3,7 @@
   var __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __hasProp = {}.hasOwnProperty;
 
-  define(["backbone", "views/base_header_view", "views/login_view", "views/home_view", "views/game_view"], function(Backbone, BaseHeaderView, LoginView, HomeView, GameView) {
+  define(["backbone", "views/base_header_view", "views/login_view", "views/home_view", "views/categories_view", "views/get_ready_view", "views/game_view"], function(Backbone, BaseHeaderView, LoginView, HomeView, CategoriesView, GetReadyView, GameView) {
     var AppRouter;
     AppRouter = (function(_super) {
       __extends(AppRouter, _super);
@@ -16,7 +16,9 @@
         "": "home",
         "login(/:direction)": "login",
         "home(/:direction)": "home",
-        "game(/:direction)": "game"
+        "game(/:direction)": "game",
+        "categories(/:direction)": "categories",
+        "get_ready/:category(/:direction)": "getReady"
       };
 
       AppRouter.prototype.directionBack = "back";
@@ -52,9 +54,6 @@
       };
 
       AppRouter.prototype.beforeRoute = function(callback) {
-        if (this.currentView != null) {
-          this.currentView.remove();
-        }
         if (!callback) {
           return false;
         }
@@ -71,31 +70,61 @@
       AppRouter.prototype.afterRoute = function() {};
 
       AppRouter.prototype.auth = function() {
-        return localStorage.loginEmail != null;
+        return (localStorage.pictureTriviaLoginEmail != null) && localStorage.pictureTriviaUserId;
+      };
+
+      AppRouter.prototype.resetCurrentView = function(view) {
+        if (this.currentView != null) {
+          this.currentView.remove();
+        }
+        return this.currentView = view;
       };
 
       AppRouter.prototype.login = function(direction) {
-        var el;
-        this.currentView = new LoginView();
-        el = this.currentView.render().$el;
+        var el, view;
+        view = new LoginView();
+        el = view.render().$el;
         this.transition(el, direction);
+        this.resetCurrentView(view);
         return this.navigate("login");
       };
 
       AppRouter.prototype.home = function(direction) {
-        var el;
-        this.currentView = new HomeView();
-        el = this.currentView.render().$el;
+        var el, view;
+        view = new HomeView();
+        el = view.render().$el;
         this.transition(el, direction);
+        this.resetCurrentView(view);
         return this.navigate("home");
       };
 
       AppRouter.prototype.game = function(direction) {
-        var el;
-        this.currentView = new GameView();
-        el = this.currentView.render().$el;
+        var el, view;
+        view = new GameView();
+        el = view.render().$el;
         this.transition(el, direction);
+        this.resetCurrentView(view);
         return this.navigate("game");
+      };
+
+      AppRouter.prototype.categories = function(direction) {
+        var el, view;
+        view = new CategoriesView();
+        el = view.render().$el;
+        this.transition(el, direction);
+        this.resetCurrentView(view);
+        return this.navigate("categories");
+      };
+
+      AppRouter.prototype.getReady = function(categoryName, direction) {
+        var el, view;
+        view = new GetReadyView({
+          categoryName: categoryName
+        });
+        el = view.render().$el;
+        this.transition(el, direction);
+        this.resetCurrentView(view);
+        return this.navigate("get_ready");
       };
 
       AppRouter.prototype.bars = {

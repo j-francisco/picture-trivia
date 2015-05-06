@@ -18,16 +18,15 @@ define ["backbone",
 
 			initialize: (options) ->
 				@subViews = []
-				@model = options.question
-
-			# zoom and drag functionality learned from: http://phrogz.net/tmp/canvas_zoom_to_cursor.html
+				@model = options.model
 
 			render: () ->
 				@$el.html(@template(question: @model))
 
 				# @startCanvas()
-
-				@model.get("answers").each (answer) =>
+				_.each @model.get("answers"), (answerJson) =>
+					answer = new Answer(answerJson)
+					answer.set("question", @model)
 					answerView = new AnswerView(model: answer)
 					@subViews.push answerView
 					@$el.find(".answer-container").append(answerView.render().el)
@@ -36,7 +35,11 @@ define ["backbone",
 
 			answerClicked: (answerId) ->
 				correct = parseInt(answerId) == parseInt(@model.get("answer_id"))
-				PictureTrivia.eventBus.trigger("question:answered", correct)
+				PictureTrivia.eventBus.trigger("question:answered", @model.get("id"), answerId, correct)
+
+
+			
+			# zoom and drag functionality learned from: http://phrogz.net/tmp/canvas_zoom_to_cursor.html
 
 			startCanvas: () ->
 				canvas = @$el.find('canvas')[0]

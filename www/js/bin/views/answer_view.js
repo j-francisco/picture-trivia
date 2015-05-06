@@ -34,7 +34,7 @@
       };
 
       AnswerView.prototype.answerClicked = function(e) {
-        if (parseInt(this.model.get("question").get("answer_id")) === parseInt(this.model.id)) {
+        if (parseInt(this.model.get("question").get("correct_answer_id")) === parseInt(this.model.id)) {
           this.$el.addClass("answer-correct");
         } else {
           this.$el.addClass("answer-wrong");

@@ -16,7 +16,7 @@
 
       HomeView.prototype.tagName = "div";
 
-      HomeView.prototype.className = "home-start";
+      HomeView.prototype.className = "hw-100";
 
       HomeView.prototype.render = function() {
         this.$el.html(this.template());

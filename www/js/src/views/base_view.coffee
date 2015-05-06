@@ -6,8 +6,6 @@ define ["backbone"], (Backbone) ->
 				_.each @eventBus, (item) =>
 					key = Object.keys(item)[0]
 					method = @[item[key]]
-					console.log "On"
-					console.log key
 					PictureTrivia.eventBus.on key, method, @
 					return
 
@@ -26,7 +24,6 @@ define ["backbone"], (Backbone) ->
 
 			@undelegateEvents()
 
-			# Call inherited method
 			Backbone.View.prototype.remove.call(this)
 			return
 
@@ -34,4 +31,5 @@ define ["backbone"], (Backbone) ->
 			return _.extend({}, @baseEvents, @additionalEvents);
 
 		goBack: () ->
-			window.history.back()
+			history.go(-1)
+			# window.history.back()

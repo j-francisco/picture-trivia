@@ -1,3 +1,29 @@
+.pt-primary-color-0 { color: rgba(238,128,  8,1) }
+.pt-primary-color-1 { color: rgba(255,148, 32,1) }
+.pt-primary-color-2 { color: rgba(255,142, 20,1) }
+.pt-primary-color-3 { color: rgba(179,103, 21,1) }
+.pt-primary-color-4 { color: rgba(122, 69, 12,1) }
+.pt-primary-bgcolor-0 { background-color: rgba(238,128,  8,1) }
+.pt-primary-bgcolor-1 { background-color: rgba(255,148, 32,1) }
+.pt-primary-bgcolor-2 { background-color: rgba(255,142, 20,1) }
+.pt-primary-bgcolor-3 { background-color: rgba(179,103, 21,1) }
+.pt-primary-bgcolor-4 { background-color: rgba(122, 69, 12,1) }
+
+.pt-complement-color-0 { color: rgba( 11,111,150,1) }
+.pt-complement-color-1 { color: rgba( 34,163,212,1) }
+.pt-complement-color-2 { color: rgba( 21,137,182,1) }
+.pt-complement-color-3 { color: rgba( 17, 86,113,1) }
+.pt-complement-color-4 { color: rgba( 10, 58, 76,1) }
+
+.pt-complement-bgcolor-0 { background-color: rgba( 11,111,150,1) }
+.pt-complement-bgcolor-1 { background-color: rgba( 34,163,212,1); color: white; }
+.pt-complement-bgcolor-2 { background-color: rgba( 21,137,182,1) }
+.pt-complement-bgcolor-3 { background-color: rgba( 17, 86,113,1) }
+.pt-complement-bgcolor-4 { background-color: rgba( 10, 58, 76,1) }
+
+.pt-complement-bgcolor-1:active {
+  background-color: rgba( 11,111,150,1);
+}
 
 /*yellow*/
 .pt-color-yellow {
@@ -136,20 +162,24 @@ form {
 }
 
 
-.home-start {
+.hw-100 {
   height: 100%;
   width: 100%;
 }
 
-.play-now-btn {
+.home-btns-container {
+  margin-top: 50px;
+}
+
+.categories-btns-container {
+  margin: auto;
+  width: 355px;
+  margin-top: 50px;
+}
+
+.block-btn {
   width: 175px;
   height: 100px;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
   border: 1px solid #ddd;
   text-align: center;
   -webkit-border-radius: 10px;
@@ -157,7 +187,17 @@ form {
   border-radius: 10px;
 }
 
-.play-lbl {
+.block-btn-1 {
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.block-btn-2 {
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.block-btn-lbl {
   display: inline-block;
   margin-top: 40px;
   color: white;
@@ -192,6 +232,10 @@ form {
 
 .btn-primary:focus {
   outline: none;
+}
+
+.get-ready-img {
+  margin-bottom: 25px;
 }
 
 /*.question-picture-canvas {
