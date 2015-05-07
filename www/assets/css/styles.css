@@ -211,7 +211,7 @@ form {
 .question-picture {
   margin-top: 10px;
   height: 275px;
-  width: 320px;
+  max-width: 340px;
 }
 
 .answer-container {

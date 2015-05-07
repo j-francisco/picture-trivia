@@ -28,23 +28,23 @@
             lbl = "World";
             break;
           case "north_america":
-            img = "";
+            img = "assets/img/countries/north_america.png";
             lbl = "North America";
             break;
           case "south_america":
-            img = "";
+            img = "assets/img/countries/south_america.png";
             lbl = "South America";
             break;
           case "europe":
-            img = "";
+            img = "assets/img/countries/europe.png";
             lbl = "Europe";
             break;
           case "asia":
-            img = "";
+            img = "assets/img/countries/asia.png";
             lbl = "Asia";
             break;
           case "africa":
-            img = "";
+            img = "assets/img/countries/africa.png";
             lbl = "Africa";
             break;
           default:
