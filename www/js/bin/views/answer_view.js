@@ -16,7 +16,7 @@
 
       AnswerView.prototype.tagName = "button";
 
-      AnswerView.prototype.className = "btn btn-primary btn-block btn-outlined answer";
+      AnswerView.prototype.className = "btn btn-block btn-outlined pt-complement-bgcolor-1 answer";
 
       AnswerView.prototype.additionalEvents = {
         "click": "answerClicked"

@@ -18,7 +18,7 @@ define [
 			"": "home"
 			"login(/:direction)": "login"
 			"home(/:direction)": "home"
-			"game(/:direction)": "game"
+			"game/:category(/:direction)": "game"
 			"categories(/:direction)": "categories"
 			"get_ready/:category(/:direction)": "getReady"
 
@@ -101,8 +101,8 @@ define [
 
 			@navigate("home")
 
-		game: (direction) ->
-			view = new GameView()
+		game: (categoryName, direction) ->
+			view = new GameView({categoryName: categoryName})
 
 			el = view.render().$el
 

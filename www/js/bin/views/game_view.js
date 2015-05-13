@@ -30,11 +30,12 @@
 
       GameView.prototype.subViews = [];
 
-      GameView.prototype.initialize = function() {
+      GameView.prototype.initialize = function(options) {
         var game, gameDetails;
+        this.categoryName = options.categoryName;
         game = new Game();
         gameDetails = {
-          category_id: 1,
+          category_name: this.categoryName,
           user_id: localStorage.pictureTriviaUserId
         };
         return game.save(gameDetails, {
@@ -73,19 +74,34 @@
       };
 
       GameView.prototype.renderNextQuestion = function(questionIndex) {
-        var question, questionJson;
+        var nextQuestionEl, previousQuestionView, question, questionContainer, questionJson;
         this.currentQuestionIndex = questionIndex;
         questionJson = this.game.get("questions")[questionIndex];
         if (questionJson != null) {
-          if (this.questionView != null) {
-            this.questionView.remove();
-          }
+          previousQuestionView = this.questionView;
           question = new Question(questionJson);
           this.questionView = new QuestionView({
             model: question
           });
           this.subViews.push(this.questionView);
-          return this.$el.find(".question-container").html(this.questionView.render().el);
+          questionContainer = this.$el.find(".question-container");
+          nextQuestionEl = this.questionView.render().el;
+          if (this.currentQuestionIndex === 0) {
+            questionContainer.html(nextQuestionEl);
+            if (previousQuestionView != null) {
+              return previousQuestionView.remove();
+            }
+          } else {
+            return questionContainer.fadeOut(400, (function(_this) {
+              return function() {
+                questionContainer.html(nextQuestionEl);
+                questionContainer.fadeIn(400);
+                if (previousQuestionView != null) {
+                  return previousQuestionView.remove();
+                }
+              };
+            })(this));
+          }
         } else {
           return alert("All Done!");
         }
@@ -99,7 +115,11 @@
           return alert("All Done!");
         } else {
           this.submitAnswer(questionId, answerId, isCorrect, false);
-          return this.renderNextQuestion(nextIndex);
+          return setTimeout(((function(_this) {
+            return function() {
+              return _this.renderNextQuestion(nextIndex);
+            };
+          })(this)), 1500);
         }
       };
 

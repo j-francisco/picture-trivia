@@ -39,6 +39,7 @@ define ["backbone",
 			@$el.html(@template({
 				img: img
 				lbl: lbl
+				categoryName: @categoryName
 			}))
 
 			return this

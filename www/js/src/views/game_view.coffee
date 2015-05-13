@@ -22,10 +22,11 @@ define ["backbone",
 
 		subViews: []
 
-		initialize: () ->
+		initialize: (options) ->
+			@categoryName = options.categoryName
 			game = new Game()
 			gameDetails = 
-				category_id: 1
+				category_name: @categoryName
 				user_id: localStorage.pictureTriviaUserId
 
 			game.save(gameDetails, {
@@ -106,14 +107,26 @@ define ["backbone",
 
 			if questionJson?
 
-				@questionView.remove() if @questionView?
+				previousQuestionView = @questionView
 
 				question = new Question(questionJson) 
 				@questionView = new QuestionView(model: question)
 
 				@subViews.push @questionView
 
-				@$el.find(".question-container").html(@questionView.render().el)
+				questionContainer = @$el.find(".question-container")
+
+				nextQuestionEl = @questionView.render().el
+
+				if @currentQuestionIndex == 0
+					questionContainer.html(nextQuestionEl)
+					previousQuestionView.remove() if previousQuestionView?
+				else
+					questionContainer.fadeOut(400, () =>
+						questionContainer.html(nextQuestionEl)
+						questionContainer.fadeIn(400)
+						previousQuestionView.remove() if previousQuestionView?
+					)
 
 			else
 				alert("All Done!")
@@ -127,7 +140,7 @@ define ["backbone",
 				alert("All Done!")
 			else
 				@submitAnswer(questionId, answerId, isCorrect, false)
-				@renderNextQuestion(nextIndex)
+				setTimeout((() => @renderNextQuestion(nextIndex)), 1500)
 
 		submitAnswer: (questionId, answerId, isCorrect, isFinished) ->
 			$.ajax

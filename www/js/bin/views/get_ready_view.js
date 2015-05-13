@@ -53,7 +53,8 @@
         }
         this.$el.html(this.template({
           img: img,
-          lbl: lbl
+          lbl: lbl,
+          categoryName: this.categoryName
         }));
         return this;
       };

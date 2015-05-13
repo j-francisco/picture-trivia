@@ -220,14 +220,17 @@ form {
   padding-right: 20px;
 }
 
-.btn-outlined.btn-primary.answer-correct {
-  border-color: #00BD72;
-  color: #00BD72;
+.answer.answer-correct {
+  /*border-color: #00BD72;
+  color: #00BD72;*/
+  /*background-color: rgb(34,212,83);*/
+  background-color: rgb(34,212,172);
 }
 
-.btn-outlined.btn-primary.answer-wrong {
-  border-color: #E34517;
-  color: #E34517;
+.answer.answer-wrong {
+  /*border-color: #E34517;
+  color: #E34517;*/
+  background-color: rgb(212,83,34);
 }
 
 .btn-primary:focus {

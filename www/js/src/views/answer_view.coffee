@@ -6,7 +6,7 @@ define ["backbone",
 	class AnswerView extends BaseView
 		template: _.template(template)
 		tagName: "button"
-		className: "btn btn-primary btn-block btn-outlined answer"
+		className: "btn btn-block btn-outlined pt-complement-bgcolor-1 answer"
 
 		additionalEvents:
 			"click": "answerClicked"

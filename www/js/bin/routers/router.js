@@ -16,7 +16,7 @@
         "": "home",
         "login(/:direction)": "login",
         "home(/:direction)": "home",
-        "game(/:direction)": "game",
+        "game/:category(/:direction)": "game",
         "categories(/:direction)": "categories",
         "get_ready/:category(/:direction)": "getReady"
       };
@@ -98,9 +98,11 @@
         return this.navigate("home");
       };
 
-      AppRouter.prototype.game = function(direction) {
+      AppRouter.prototype.game = function(categoryName, direction) {
         var el, view;
-        view = new GameView();
+        view = new GameView({
+          categoryName: categoryName
+        });
         el = view.render().$el;
         this.transition(el, direction);
         this.resetCurrentView(view);
