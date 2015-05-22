@@ -5,13 +5,15 @@ define [
 	"views/home_view",
 	"views/categories_view",
 	"views/get_ready_view",
-	"views/game_view"],	(Backbone, 
+	"views/game_view",
+	"views/final_score_view"],	(Backbone, 
 		BaseHeaderView,
 		LoginView, 
 		HomeView,
 		CategoriesView,
 		GetReadyView,
-		GameView) ->
+		GameView,
+		FinalScoreView) ->
 
 	class AppRouter extends Backbone.Router
 		routes:
@@ -21,6 +23,7 @@ define [
 			"game/:category(/:direction)": "game"
 			"categories(/:direction)": "categories"
 			"get_ready/:category(/:direction)": "getReady"
+			"final_score/:game_id(/:direction)": "finalScore"
 
 		directionBack: "back"
 		directionForward: "forward"
@@ -133,6 +136,17 @@ define [
 			@resetCurrentView(view)
 
 			@navigate("get_ready")
+
+		finalScore: (gameId, direction) ->
+			view = new FinalScoreView({gameId: gameId})
+
+			el = view.render().$el 
+
+			@transition(el, direction)
+
+			@resetCurrentView(view)
+
+			@navigate("final_score")
 			
 
 		bars: {

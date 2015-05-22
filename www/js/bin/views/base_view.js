@@ -3,7 +3,7 @@
   var __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __hasProp = {}.hasOwnProperty;
 
-  define(["backbone"], function(Backbone) {
+  define(["backbone", "text!tpl/display_values.html"], function(Backbone, displayValuesTemplate) {
     var BaseView;
     return BaseView = (function(_super) {
       __extends(BaseView, _super);
@@ -48,6 +48,19 @@
 
       BaseView.prototype.goBack = function() {
         return history.go(-1);
+      };
+
+      BaseView.prototype.getDisplayValue = function(val) {
+        var displayValue, tpl, values;
+        tpl = _.template(displayValuesTemplate);
+        values = JSON.parse($(tpl()).text());
+        displayValue = _.find(values, function(row) {
+          return row.key === val;
+        });
+        if (displayValue == null) {
+          return "";
+        }
+        return displayValue.displayVal;
       };
 
       return BaseView;

@@ -1,4 +1,5 @@
-define ["backbone"], (Backbone) ->
+define ["backbone",
+	"text!tpl/display_values.html"], (Backbone, displayValuesTemplate) ->
 	class BaseView extends Backbone.View
 		constructor: ->
 			# If the view has event bus definitions, load them
@@ -33,3 +34,11 @@ define ["backbone"], (Backbone) ->
 		goBack: () ->
 			history.go(-1)
 			# window.history.back()
+
+		getDisplayValue: (val) ->
+			tpl = _.template(displayValuesTemplate)
+			values = JSON.parse($(tpl()).text())
+			displayValue = _.find values, (row) -> row.key == val
+			if !displayValue?
+				return ""
+			return displayValue.displayVal

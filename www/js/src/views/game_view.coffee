@@ -129,7 +129,8 @@ define ["backbone",
 					)
 
 			else
-				alert("All Done!")
+				# something went wrong if you get here
+				@endGame()
 
 
 		questionAnswered: (questionId, answerId, isCorrect) ->
@@ -137,10 +138,10 @@ define ["backbone",
 			
 			if @game.get("questions").length == nextIndex
 				@submitAnswer(questionId, answerId, isCorrect, true)
-				alert("All Done!")
+				@endGame()
 			else
 				@submitAnswer(questionId, answerId, isCorrect, false)
-				setTimeout((() => @renderNextQuestion(nextIndex)), 1500)
+				setTimeout((() => @renderNextQuestion(nextIndex)), 750)
 
 		submitAnswer: (questionId, answerId, isCorrect, isFinished) ->
 			$.ajax
@@ -157,6 +158,11 @@ define ["backbone",
 				error: (result) ->
 					console.log result.responseText
 					console.log "question answer failed"
+
+		endGame: () ->
+			setTimeout((() => 
+				url = "final_score/#{@game.id}/forward"
+				Backbone.history.loadUrl(url)), 750)
 
 
 	return GameView

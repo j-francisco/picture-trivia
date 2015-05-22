@@ -12,7 +12,7 @@
         return Game.__super__.constructor.apply(this, arguments);
       }
 
-      Game.prototype.urlRoot = window.apiHost + "game";
+      Game.prototype.urlRoot = window.apiHost + "games";
 
       return Game;
 

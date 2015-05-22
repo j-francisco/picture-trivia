@@ -103,7 +103,7 @@
             })(this));
           }
         } else {
-          return alert("All Done!");
+          return this.endGame();
         }
       };
 
@@ -112,14 +112,14 @@
         nextIndex = this.currentQuestionIndex + 1;
         if (this.game.get("questions").length === nextIndex) {
           this.submitAnswer(questionId, answerId, isCorrect, true);
-          return alert("All Done!");
+          return this.endGame();
         } else {
           this.submitAnswer(questionId, answerId, isCorrect, false);
           return setTimeout(((function(_this) {
             return function() {
               return _this.renderNextQuestion(nextIndex);
             };
-          })(this)), 1500);
+          })(this)), 750);
         }
       };
 
@@ -142,6 +142,16 @@
             return console.log("question answer failed");
           }
         });
+      };
+
+      GameView.prototype.endGame = function() {
+        return setTimeout(((function(_this) {
+          return function() {
+            var url;
+            url = "final_score/" + _this.game.id + "/forward";
+            return Backbone.history.loadUrl(url);
+          };
+        })(this)), 750);
       };
 
       return GameView;

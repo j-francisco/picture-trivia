@@ -244,3 +244,13 @@ form {
 /*.question-picture-canvas {
   border: 1px solid;
 }*/
+
+.final-score {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 22px;
+}
+
+.final-score .header-label {
+  margin-bottom: 50px;
+}

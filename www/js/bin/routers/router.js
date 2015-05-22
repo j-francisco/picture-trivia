@@ -3,7 +3,7 @@
   var __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __hasProp = {}.hasOwnProperty;
 
-  define(["backbone", "views/base_header_view", "views/login_view", "views/home_view", "views/categories_view", "views/get_ready_view", "views/game_view"], function(Backbone, BaseHeaderView, LoginView, HomeView, CategoriesView, GetReadyView, GameView) {
+  define(["backbone", "views/base_header_view", "views/login_view", "views/home_view", "views/categories_view", "views/get_ready_view", "views/game_view", "views/final_score_view"], function(Backbone, BaseHeaderView, LoginView, HomeView, CategoriesView, GetReadyView, GameView, FinalScoreView) {
     var AppRouter;
     AppRouter = (function(_super) {
       __extends(AppRouter, _super);
@@ -18,7 +18,8 @@
         "home(/:direction)": "home",
         "game/:category(/:direction)": "game",
         "categories(/:direction)": "categories",
-        "get_ready/:category(/:direction)": "getReady"
+        "get_ready/:category(/:direction)": "getReady",
+        "final_score/:game_id(/:direction)": "finalScore"
       };
 
       AppRouter.prototype.directionBack = "back";
@@ -127,6 +128,17 @@
         this.transition(el, direction);
         this.resetCurrentView(view);
         return this.navigate("get_ready");
+      };
+
+      AppRouter.prototype.finalScore = function(gameId, direction) {
+        var el, view;
+        view = new FinalScoreView({
+          gameId: gameId
+        });
+        el = view.render().$el;
+        this.transition(el, direction);
+        this.resetCurrentView(view);
+        return this.navigate("final_score");
       };
 
       AppRouter.prototype.bars = {
