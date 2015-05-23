@@ -141,13 +141,6 @@
         return this.navigate("final_score");
       };
 
-      AppRouter.prototype.bars = {
-        bartab: '.bar-tab',
-        barnav: '.bar-nav',
-        barfooter: '.bar-footer',
-        barheadersecondary: '.bar-header-secondary'
-      };
-
       AppRouter.prototype.transition = function(el, direction, container, callback) {
         var data, options, transition;
         transition = (function() {
@@ -175,23 +168,8 @@
       };
 
       AppRouter.prototype.doTransition = function(data, options, callback) {
-        var barElement, key, _i, _len, _ref;
         if (data.title) {
           document.title = data.title;
-        }
-        if (options.transition) {
-          _ref = this.bars;
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            key = _ref[_i];
-            if (this.bars.hasOwnProperty(key)) {
-              barElement = $(this.bars[key]);
-              if (data[key]) {
-                swapContent(data[key], barElement);
-              } else if (barElement) {
-                barElement.remove();
-              }
-            }
-          }
         }
         return this.swapContent(data.contents, options.container, options.transition, callback);
       };

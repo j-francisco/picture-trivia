@@ -147,19 +147,6 @@ define [
 			@resetCurrentView(view)
 
 			@navigate("final_score")
-			
-
-		bars: {
-			bartab : '.bar-tab',
-			barnav : '.bar-nav',
-			barfooter : '.bar-footer',
-			barheadersecondary : '.bar-header-secondary'
-		}
-
-		#TODO - updating header and footer buttons/menus etc.
-		# idea - each view could have its own header and footer that also gets updated here.
-		# have a base view to handle the common defaults.
-		# the bars above will be key to this i think
 		
 		transition: (el, direction, container, callback) ->
 			transition = switch
@@ -184,15 +171,6 @@ define [
 			
 			if data.title
 				document.title = data.title;
-
-			if options.transition
-				for key in @bars
-					if @bars.hasOwnProperty(key)
-						barElement = $(@bars[key])
-						if (data[key]) 
-							swapContent(data[key], barElement)
-						else if (barElement)
-							barElement.remove()
 
 			@swapContent(data.contents, options.container, options.transition, callback)
 
