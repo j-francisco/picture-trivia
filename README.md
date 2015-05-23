@@ -29,7 +29,7 @@ The fun part was combining all these different things and getting it all to work
 * Enable automatic CoffeeScript compilation from the **www** directory:
 > cake watch
 
-* After you make changes, re-build from the **www* directory with:
+* After you make changes, re-build from the **www** directory with:
 > node r.js -o app.build.js
 
 * Run in the ios emulator:
