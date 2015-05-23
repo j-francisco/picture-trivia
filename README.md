@@ -1,7 +1,7 @@
 # picture-trivia
 Experimental trivia app in backbone/coffeescript/rails that can run on iOS via Cordova
 
-## To setup (on a Mac):
+#### To setup (on a Mac):
 
 * Install Node.js
 
