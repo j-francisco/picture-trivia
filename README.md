@@ -40,6 +40,7 @@ The fun part was combining all these different things and getting it all to work
 > cordova emulate ios
 
 * Or just run in a browser by launching a python server from the **www** directory:
-> python -m SimpleHTTPServer
+  
+  `python -m SimpleHTTPServer`
 
   Then go to **http://localhost:8000**
