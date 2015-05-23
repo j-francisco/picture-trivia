@@ -17,7 +17,7 @@ The app is built with cordova, backbone.js and coffeescript. The backend is ruby
 * Run the rails backend api from the **picture_trivia_api** directory:
 > foreman start
 
-You'll need to create a new user record in the database from the rails console.
+  You'll need to create a new user record in the database from the rails console.
 
 * Enable automatic coffeescript compilation from the **www** directory:
 > cake watch
