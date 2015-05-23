@@ -1,16 +1,21 @@
 # picture-trivia
 Experimental trivia app in backbone/coffeescript/rails that can run on iOS via Cordova
 
-The app is built with cordova, backbone.js and coffeescript. The backend is ruby on rails for storing the game questions, answers, users and game history. All of the app coffeescript code is in **www/js/src** and is automatically compiled into javascript in **www/js/bin** with **cake**. Then I use [r.js](https://github.com/jrburke/r.js/) and [almond](https://github.com/jrburke/almond) to use RequireJS-like syntax for loading modules and compiling everything into a single javascript file (**www/js/bin/main_app.js**)
+The app is built with cordova, backbone.js and coffeescript. 
+
+The backend is ruby on rails for storing the game questions, answers, users and game history. There's not much authentication though.
+
+I used [ratchet](http://goratchet.com/) for some of the styling.
+
+All of the app coffeescript code is in **www/js/src** and is automatically compiled into javascript in **www/js/bin** with **cake**. Then I use [r.js](https://github.com/jrburke/r.js/) and [almond](https://github.com/jrburke/almond) to use RequireJS-like syntax for loading modules and compiling everything into a single javascript file (**www/js/bin/main_app.js**)
+
+The fun part was combining all these different things and getting it all to work. Realistically, the game isn't very impressive. There's just three easy questions
 
 #### To setup (on a Mac):
 
 * Install Node.js
 
 * Follow this [tutorial](http://ccoenraets.github.io/cordova-tutorial/create-cordova-project.html) to install cordova, the ios platform, the ios emulator and the other basic cordova plugins it talks about.
-
-* Run the app from the **www** directory:
-> python -m SimpleHTTPServer
 
 * Create a postgres database named **picture_trivia_dev**
 
@@ -27,3 +32,8 @@ The app is built with cordova, backbone.js and coffeescript. The backend is ruby
 
 * Run in the ios emulator:
 > cordova emulate ios
+
+* Or just run in a browser by launching a python server from **www* directory:
+> python -m SimpleHTTPServer
+
+  Then go to **http://localhost:8000**
