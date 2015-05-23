@@ -33,7 +33,7 @@ The fun part was combining all these different things and getting it all to work
 * Run in the ios emulator:
 > cordova emulate ios
 
-* Or just run in a browser by launching a python server from **www* directory:
+* Or just run in a browser by launching a python server from the **www** directory:
 > python -m SimpleHTTPServer
 
   Then go to **http://localhost:8000**
