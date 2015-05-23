@@ -1,0 +1,32 @@
+<div>
+	<a href="/questions">Back to list</a>
+</div>
+
+<h3>Question</h3>
+<div><%= @question.text %></div>
+
+<h3>Category</h3>
+<div style="margin-bottom: 20px;"><%= @question.category.name %></div>
+
+<div>
+	<%= cl_image_tag(@question.img_public_id + ".png") %>
+</div>
+
+<h3>Answers</h3>
+
+<div>
+	<% @question.answers.each do |a| %>
+		<div>
+			
+			<% if a.id == @question.correct_answer_id %>
+				<span style="font-weight: bold"><%= a.text %></span>
+			<% else %>
+				<%= a.text %>
+			<% end %>
+		</div>
+	<% end %>
+</div>
+
+<div style="margin-top: 10px;">
+	<a href="/questions">Back to list</a>
+</div>

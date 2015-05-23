@@ -1,0 +1,104 @@
+<h1>New Question</h1>
+
+<%= form_for @question do |f|%>
+	<div class="form-group">
+		<label for="questionText">Question Text</label>
+		<textarea class="form-control" required name="text" id="questionText" placeholder="Enter Question..."></textarea>
+	</div>
+
+	<div class="form-group">
+		<label for="category">Category</label>
+		<select id="category" name="category" onchange="categoryChanged()">
+			<option disabled selected></option>
+			<option value="0">Add New...</option>
+			<% @categories.each do |c| %>
+				<option value="<%= c[0] %>"><%= c[1] %></option>
+			<% end %>
+		</select>
+		<input type="text" class="form-control hide" id="newCategory" name="new_category" placeholder="New Category Name...">
+	</div>
+
+	<div class="form-group">
+		<label for="questionImgSrc">Upload Image</label>
+		<%= f.file_field :img_src, :required => true %>
+		<!-- <input type="file" required id="questionImgSrc" name="img_src"> -->
+		<!-- <p class="help-block">Example block-level help text here.</p> -->
+	</div>
+
+	<h3>Answers</h3>
+	
+	<div class="question-answers-section">
+		<div class="form-group">
+			<!-- <label for="answer1">Answer #1</label> -->
+			<input type="text" required class="form-control" id="answer1" name="answer1" placeholder="Answer #1...">
+		</div>
+
+		<div class="radio">
+			<label>
+				<input type="radio" name="correct_answer" id="correctAnswer1" value="1" checked>
+				Answer #1 is correct
+			</label>
+		</div>
+
+		<hr/>
+
+		<div class="form-group">
+			<!-- <label for="answer1">Answer #2</label> -->
+			<input type="text" required class="form-control" id="answer2" name="answer2" placeholder="Answer #2...">
+		</div>
+
+		<div class="radio">
+			<label>
+				<input type="radio" name="correct_answer" id="correctAnswer2" value="2" >
+				Answer #2 is correct
+			</label>
+		</div>
+
+		<hr/>
+
+		<div class="form-group">
+			<!-- <label for="answer1">Answer #3</label> -->
+			<input type="text" required class="form-control" id="answer3" name="answer3" placeholder="Answer #3...">
+		</div>
+
+		<div class="radio">
+			<label>
+				<input type="radio" name="correct_answer" id="correctAnswer3" value="3" >
+				Answer #3 is correct
+			</label>
+		</div>
+
+		<hr/>
+
+		<div class="form-group">
+			<!-- <label for="answer1">Answer 4</label> -->
+			<input type="text" required class="form-control" id="answer4" name="answer4" placeholder="Answer #4...">
+		</div>
+
+		<div class="radio">
+			<label>
+				<input type="radio" name="correct_answer" id="correctAnswer4" value="4" >
+				Answer #4 is correct
+			</label>
+		</div>
+
+		<hr/>
+	</div>
+
+	<button type="submit" class="btn btn-success">Create</button>
+<% end %>
+
+<a href="/questions">Cancel</a>
+
+<script type="text/javascript">
+	function categoryChanged() {
+		var categorySelect = document.getElementById("category")
+		selectedVal = categorySelect.options[categorySelect.selectedIndex].value
+
+		if (selectedVal == 0) {
+			document.getElementById("newCategory").classList.remove("hide")
+		} else {
+			document.getElementById("newCategory").classList.add("hide")
+		}
+	}
+</script>
