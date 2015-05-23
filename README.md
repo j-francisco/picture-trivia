@@ -29,8 +29,12 @@ The fun part was combining all these different things and getting it all to work
 * Enable automatic CoffeeScript compilation from the **www** directory:
 > cake watch
 
+  With this running, every time you save a .coffee file in **www/js/src**, it gets compiled into a .js file in **www/js/bin** 
+
 * After you make changes, re-build from the **www** directory with:
 > node r.js -o app.build.js
+
+  This uses the config in **app.build.js** to compile all of the required .js files and libraries into a single file named **main_app.js**, which is loaded in **index.html**.
 
 * Run in the ios emulator:
 > cordova emulate ios
