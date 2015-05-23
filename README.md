@@ -9,7 +9,7 @@ I used [ratchet](http://goratchet.com/) for some of the styling.
 
 All of the app coffeescript code is in **www/js/src** and is automatically compiled into javascript in **www/js/bin** with **cake**. Then I use [r.js](https://github.com/jrburke/r.js/) and [almond](https://github.com/jrburke/almond) to use RequireJS-like syntax for loading modules and compiling everything into a single javascript file (**www/js/bin/main_app.js**)
 
-The fun part was combining all these different things and getting it all to work. Realistically, the game isn't very impressive. There's just three easy questions
+The fun part was combining all these different things and getting it all to work. Realistically, the game isn't very impressive. There's just three easy questions and then a fake final score screen. I stopped working on it to focus on other projects. But it's a good example of how to use the various libraries and frameworks together.
 
 #### To setup (on a Mac):
 
@@ -23,6 +23,8 @@ The fun part was combining all these different things and getting it all to work
 > foreman start
 
   You'll need to create a new user record in the database from the rails console.
+  
+  You can create more questions by going to **http://localhost:5000/questions/new**, but the pictures get uploaded to Cloudinary, so you'll need to add your own cloudinary.yml to the **www/picture_trivia_api/config** directory.
 
 * Enable automatic coffeescript compilation from the **www** directory:
 > cake watch
