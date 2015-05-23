@@ -25,7 +25,6 @@
 		'backbone': '../lib/backbone',
 		'text': '../lib/text',
 		'fastclick': '../lib/fastclick',
-		'pageslider': '../lib/pageslider',
 		'ratchet': '../lib/ratchet'
 	}
 })

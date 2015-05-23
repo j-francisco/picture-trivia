@@ -21,7 +21,6 @@ define ["backbone",
 			).fail(() =>
 				Backbone.history.loadUrl("home")
 			)
-			# console.log @game
 			
 			return this
 

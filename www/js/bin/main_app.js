@@ -6477,16 +6477,12 @@ define("ratchet", function(){});
       'backbone': '../lib/backbone-min',
       'text': '../lib/text',
       'fastclick': '../lib/fastclick',
-      'pageslider': '../lib/pageslider',
       'ratchet': '../lib/ratchet'
     },
     waitSeconds: 15,
     shim: {
       'fastclick': {
         exports: 'FastClick'
-      },
-      'pageslider': {
-        exports: 'PageSlider'
       },
       'underscore': {
         exports: '_'
