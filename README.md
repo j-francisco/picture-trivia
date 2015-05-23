@@ -1,13 +1,13 @@
 # picture-trivia
-Experimental trivia app in backbone/coffeescript/rails that can run on iOS via Cordova
+Experimental trivia app that can run on iOS via [Cordova](https://cordova.apache.org/)
 
-The app is built with cordova, backbone.js and coffeescript. 
+The app is built with Cordova, Backbone.js and CoffeeScript. 
 
-The backend is ruby on rails for storing the game questions, answers, users and game history. There's not much authentication though.
+The backend is a Ruby on Rails app for storing and retrieving the game questions, answers, users and game history. There's not much authentication though.
 
 I used [ratchet](http://goratchet.com/) for some of the styling.
 
-All of the app coffeescript code is in **www/js/src** and is automatically compiled into javascript in **www/js/bin** with **cake**. Then I use [r.js](https://github.com/jrburke/r.js/) and [almond](https://github.com/jrburke/almond) to use RequireJS-like syntax for loading modules and compiling everything into a single javascript file (**www/js/bin/main_app.js**)
+All of the app CoffeeScript code is in **www/js/src** and is automatically compiled into javascript in **www/js/bin** with **cake**. Then I use [r.js](https://github.com/jrburke/r.js/) and [almond](https://github.com/jrburke/almond) to use RequireJS-like syntax for loading modules and compiling everything into a single javascript file (**www/js/bin/main_app.js**)
 
 The fun part was combining all these different things and getting it all to work. Realistically, the game isn't very impressive. There's just three easy questions and then a fake final score screen. I stopped working on it to focus on other projects. But it's a good example of how to use the various libraries and frameworks together.
 
@@ -26,7 +26,7 @@ The fun part was combining all these different things and getting it all to work
   
   You can create more questions by going to **http://localhost:5000/questions/new**, but the pictures get uploaded to Cloudinary, so you'll need to add your own cloudinary.yml to the **www/picture_trivia_api/config** directory.
 
-* Enable automatic coffeescript compilation from the **www** directory:
+* Enable automatic CoffeeScript compilation from the **www** directory:
 > cake watch
 
 * After you make changes, re-build from the **www* directory with:
